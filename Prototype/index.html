@@ -20,11 +20,11 @@
 			pause();
 
 			if (emulateLeapMotion == true) {
-		   		window.onmousemove = handleMouseMove;
 			    function handleMouseMove(event) {
 			        event = event || window.event; // IE-ism
 			        processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight);
 			    }
+		   		window.onmousemove = handleMouseMove;
 			}
 			else {
 				Leap.loop(function (frame) {
@@ -55,7 +55,7 @@
 
 				y = y + 0.5; // add 0.5 to have y in [0.5, 1.5] to multiply with the 'default' tone and have a range between the 'half' and 'oneandahalf' tone
 
-				console.log("x, y, z: " + position[0] + ", " + position[1] + ", " + position[2] + " normalized y: " + y + " height: " + roomHeight + " freq: " + defaultFrequency + " -> " + defaultFrequency * y);
+				//console.log("x, y, z: " + position[0] + ", " + position[1] + ", " + position[2] + " normalized y: " + y + " height: " + roomHeight + " freq: " + defaultFrequency + " -> " + defaultFrequency * y);
 				if (output != undefined) {
 					output.innerHTML = "x: " + position[0] + "<br/>y: " + position[1] + "<br/>z: " + position[2] + "<br/>normalized y: " + y + "<br/>height: " + roomHeight + "<br/>old frequency: " + tone.freq.value + "<br/>new frequency: " + defaultFrequency * y;
 				}
