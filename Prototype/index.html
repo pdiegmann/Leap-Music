@@ -4,25 +4,31 @@
 	<script src="js/timbre.js"></script>
 </head>
 <body>
-	<div id="output">ABC</div>
-	<button id="toggleButton" onclick="javascript:toggle();">pause</button>
+	<div id="output"></div>
+	<button id="toggleButton" onclick="javascript:toggle();">pause</button><br/>
+	<canvas id="plot" style="width:240px;height:80px" width="240" height="80"></canvas>
 	<script>
 		var emulateLeapMotion = true; // true = mouse | false = leap motion
 		var isPlaying = true;
 		var tone = undefined;
+		var master = undefined;
 		var paddingPercentage = 0.15; // padding which surrounds the 'sensitive area'
 		var toggleButton = document.getElementById('toggleButton'); // html-dom-element for play/pause
 		var output = document.getElementById('output'); // html-dom-element for debug-output
+		var minVolume = -53;
+		var maxVolume = 12;
 
 		(function() {
-			tone = T("sin").play(); // the default 'center' tone
+			tone = T("sin", {freq: 200}) // the default 'center' tone
+			master = T("eq", {}, tone).play();
+			tone = tone.set({buddies:master});
 			var defaultFrequency = tone.freq.value; // the default tone's frequency
-			pause();
+			//pause();
 
 			if (emulateLeapMotion == true) {
 			    function handleMouseMove(event) {
 			        event = event || window.event; // IE-ism
-			        processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight);
+			        processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
 			    }
 		   		window.onmousemove = handleMouseMove;
 			}
@@ -36,15 +42,17 @@
 							if (hand != undefined) {
 								var position = hand.palmPosition;
 								var height = interactionBox.height;
-								processPositionChange(position, height);
+								var width = interactionBox.width;
+								processPositionChange(position, height, width);
 							}
 						}
 					}
 				});
 			}
 
-			function processPositionChange(position, roomHeight) {
+			function processPositionChange(position, roomHeight, roomWidth) {
 				var y = position[1]; // 0: x, 1: y, 2: z
+				var x = position[0];
 
 				y = Math.max(y, roomHeight * paddingPercentage); // => 10% of height means the 10 lowest % of room are 'ignored'
 				y = Math.min(y, roomHeight * (1 - paddingPercentage)); // => 10% of height means the 10 heighest % of room are 'ignored'
@@ -55,12 +63,31 @@
 
 				y = y + 0.5; // add 0.5 to have y in [0.5, 1.5] to multiply with the 'default' tone and have a range between the 'half' and 'oneandahalf' tone
 
+				roomWidth = roomWidth / 2; // highest volume is in the room's center
+				if (x > roomWidth) {
+					x = roomWidth - (x - roomWidth); // calculate the offset from the center and 'mirror' it into the opposite direction
+				}
+
+				x = Math.max(x, roomWidth * paddingPercentage);
+				x = Math.min(x, roomWidth * (1 - paddingPercentage));
+
+				x = x - (roomWidth * paddingPercentage);
+				x = x / (1 - (paddingPercentage * 2));
+				x = x / roomWidth;
+
+				x = x * (maxVolume + (minVolume * -1));
+				x = x - (minVolume * -1);
+
 				//console.log("x, y, z: " + position[0] + ", " + position[1] + ", " + position[2] + " normalized y: " + y + " height: " + roomHeight + " freq: " + defaultFrequency + " -> " + defaultFrequency * y);
 				if (output != undefined) {
-					output.innerHTML = "x: " + position[0] + "<br/>y: " + position[1] + "<br/>z: " + position[2] + "<br/>normalized y: " + y + "<br/>height: " + roomHeight + "<br/>old frequency: " + tone.freq.value + "<br/>new frequency: " + defaultFrequency * y;
+					output.innerHTML = "x: " + position[0] + "<br/>y: " + position[1] + "<br/>z: " + position[2] + "<br/>normalized y: " + y + "<br/>height: " + roomHeight + "<br/>old frequency: " + tone.freq.value + "<br/>new frequency: " + defaultFrequency * y + "<br/>normalized x: " + x;
 				}
 
 				tone.freq.value = defaultFrequency * y;
+
+				master.setParams(5, 1, 0, x);
+
+				master.plot({target:plot, lineWidth:2});
 			}
 	  	})();
 
