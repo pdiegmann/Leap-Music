@@ -1,0 +1,81 @@
+<html>
+<head>
+	<script src="js/leap.js"></script>
+	<script src="js/timbre.js"></script>
+</head>
+<body>
+	<div id="output">ABC</div>
+	<button id="toggleButton" onclick="javascript:toggle();">pause</button>
+	<script>
+		var emulateLeapMotion = true; // true = mouse | false = leap motion
+		var isPlaying = true;
+		var tone = undefined;
+		var paddingPercentage = 0.15; // padding which surrounds the 'sensitive area'
+		var toggleButton = document.getElementById('toggleButton'); // html-dom-element for play/pause
+		var output = document.getElementById('output'); // html-dom-element for debug-output
+
+		(function() {
+			tone = T("sin").play(); // the default 'center' tone
+			var defaultFrequency = tone.freq.value; // the default tone's frequency
+			pause();
+
+			if (emulateLeapMotion == true) {
+		   		window.onmousemove = handleMouseMove;
+			    function handleMouseMove(event) {
+			        event = event || window.event; // IE-ism
+			        processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight);
+			    }
+			}
+			else {
+				Leap.loop(function (frame) {
+					if (frame != undefined) {
+						var hands = frame.hands;
+						var interactionBox = frame.interactionBox;
+						if (interactionBox != undefined && hands != undefined && hands.length > 0) {
+							var hand = hands[0];
+							if (hand != undefined) {
+								var position = hand.palmPosition;
+								var height = interactionBox.height;
+								processPositionChange(position, height);
+							}
+						}
+					}
+				});
+			}
+
+			function processPositionChange(position, roomHeight) {
+				var y = position[1]; // 0: x, 1: y, 2: z
+
+				y = Math.max(y, roomHeight * paddingPercentage); // => 10% of height means the 10 lowest % of room are 'ignored'
+				y = Math.min(y, roomHeight * (1 - paddingPercentage)); // => 10% of height means the 10 heighest % of room are 'ignored'
+
+				y = y - (roomHeight * paddingPercentage); // move everything 10% down
+				y = y / (1 - (paddingPercentage * 2)); // stretch the room to reach 1 by dividing by 0.8
+				y = y / roomHeight; // normalize to [0..1] by dividing by max value (room's height)
+
+				y = y + 0.5; // add 0.5 to have y in [0.5, 1.5] to multiply with the 'default' tone and have a range between the 'half' and 'oneandahalf' tone
+
+				console.log("x, y, z: " + position[0] + ", " + position[1] + ", " + position[2] + " normalized y: " + y + " height: " + roomHeight + " freq: " + defaultFrequency + " -> " + defaultFrequency * y);
+				if (output != undefined) {
+					output.innerHTML = "x: " + position[0] + "<br/>y: " + position[1] + "<br/>z: " + position[2] + "<br/>normalized y: " + y + "<br/>height: " + roomHeight + "<br/>old frequency: " + tone.freq.value + "<br/>new frequency: " + defaultFrequency * y;
+				}
+
+				tone.freq.value = defaultFrequency * y;
+			}
+	  	})();
+
+		function pause() {
+			tone.pause();
+			isPlaying = false;
+			toggleButton.innerHTML = "play";
+		}
+		function play() {
+			tone.play();
+			isPlaying = true;
+			toggleButton.innerHTML = "pause";
+		}
+		function toggle() {
+			isPlaying ? pause() : play();
+		}
+	</script>
+</body>
