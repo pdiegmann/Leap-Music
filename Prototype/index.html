@@ -11,16 +11,24 @@
 		var emulateLeapMotion = true; // true = mouse | false = leap motion
 		var isPlaying = true;
 		var tone = undefined;
+		var reverb = undefined;
 		var master = undefined;
+		var phaser = undefined;
 		var paddingPercentage = 0.15; // padding which surrounds the 'sensitive area'
 		var toggleButton = document.getElementById('toggleButton'); // html-dom-element for play/pause
 		var output = document.getElementById('output'); // html-dom-element for debug-output
 		var minVolume = -53;
 		var maxVolume = 12;
+		//var maxFrequency = 493.88; // B4
+		//var minFrequency = 65.41; // C2
+		var centerFrequency = 261.63; //(maxFrequency + minFrequency) / 2;
 
 		(function() {
-			tone = T("sin", {freq: 200}) // the default 'center' tone
-			master = T("eq", {}, tone).play();
+			tone = T("sin", {freq: centerFrequency}) // the default 'center' tone
+			var freq = T("sin", {freq:0.0001, add:2400, mul:800}).kr();
+  			phaser = T("phaser", {freq:freq, Q:1, steps:8}, tone)
+			reverb = T("reverb", {room:0.4, mix:0.35}, phaser);
+			master = T("eq", {}, reverb).play();
 			tone = tone.set({buddies:master});
 			var defaultFrequency = tone.freq.value; // the default tone's frequency
 			//pause();
@@ -85,7 +93,7 @@
 
 				tone.freq.value = defaultFrequency * y;
 
-				master.setParams(5, 1, 0, x);
+				//master.setParams(5, 1, 0, x);
 
 				master.plot({target:plot, lineWidth:2});
 			}
