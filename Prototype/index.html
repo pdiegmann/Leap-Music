@@ -1,12 +1,23 @@
 <html>
 <head>
+    <title>Leap Music</title>
+    <link href="css/style.css" rel="stylesheet">
+
 	<script src="js/leap.js"></script>
 	<script src="js/timbre.js"></script>
 </head>
 <body>
+<div id="content">
+    <br>
 	<div id="output"></div>
-	<button id="toggleButton" onclick="javascript:toggle();">pause</button><br/>
-	<canvas id="plot" style="width:240px;height:80px" width="240" height="80"></canvas>
+	<br><canvas id="plot" style="width:240px;height:80px" width="240" height="80"></canvas>     
+</div>
+<div id="button">
+<br>
+	<button id="toggleButton" onclick="javascript:toggle();">pause</button>
+	<br><img src="images/logo.jpg">
+</div>
+	
 	<script>
 		var emulateLeapMotion = true; // true = mouse | false = leap motion
 		var isPlaying = true;
