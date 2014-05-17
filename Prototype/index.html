@@ -19,8 +19,9 @@
 </div>
 	
 	<script>
-		var emulateLeapMotion = true; // true = mouse | false = leap motion
+		var emulateLeapMotion = false; // true = mouse | false = leap motion
 		var isPlaying = true;
+		var block = false;
 		var tone = undefined;
 		var reverb = undefined;
 		var master = undefined;
@@ -62,27 +63,41 @@
 
 
 			if (emulateLeapMotion == true) {
+
 				function handleMouseClick(event) {
+					block=true;
+					
 					synth.noteOn(frequency);
+				}
+				function handleMouseUp(event)
+				{
+					
+					synth.allSoundOff();
+					block=false;
 				}
 			    function handleMouseMove(event) {
 			        event = event || window.event; // IE-ism
 			        processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
 			    }
 		   		window.onmousemove = handleMouseMove;
-		   		document.body.onclick = handleMouseClick;
+		   		document.body.onmousedown = handleMouseClick;
+		   		document.body. onmouseup = handleMouseUp;
 			}
 			else {
 				Leap.loop(function (frame) {
+
 					if (frame != undefined) {
+
 						var hands = frame.hands;
 						var interactionBox = frame.interactionBox;
+						
 						if (interactionBox != undefined && hands != undefined && hands.length > 0) {
-							var righthand = hand[0];
+							var lefthand = hands[0];
+							
 							if (hands.length > 1) {
-								var lefthand = hand[1];
+								var righthand = hands[1];
 
-								if (lefthand.palmPosition.x > righthand.palmPosition.x) {
+								if (lefthand.palmPosition[0] > righthand.palmPosition[0]) {
 									var dummy = lefthand;
 									lefthand = righthand;
 									righthand = dummy;
@@ -90,14 +105,19 @@
 							}
 
 							if (righthand != undefined) {
-								var position = hand.palmPosition;
+								var position = righthand.palmPosition;
 								var height = interactionBox.height;
 								var width = interactionBox.width;
 								processPositionChange(position, height, width);
-
-								if (lefthand != undefined && lefthand.palmVelocity.z > 10.0) {
+								
+								var schwelle = 50
+								if (lefthand != undefined && lefthand.palmVelocity[1] > schwelle) {
 									synth.noteOn(frequency);
 								}
+								else if(lefthand != undefined && lefthand.palmVelocity[1] < (schwelle*-1))
+								{
+									synth.allSoundOff();
+								}		
 							}
 						}
 					}
@@ -134,10 +154,11 @@
 
 				//console.log("x, y, z: " + position[0] + ", " + position[1] + ", " + position[2] + " normalized y: " + y + " height: " + roomHeight + " freq: " + defaultFrequency + " -> " + defaultFrequency * y);
 				if (output != undefined) {
-					//output.innerHTML = "x: " + position[0] + "<br/>y: " + position[1] + "<br/>z: " + position[2] + "<br/>normalized y: " + y + "<br/>height: " + roomHeight + "<br/>old frequency: " + tone.freq.value + "<br/>new frequency: " + defaultFrequency * y + "<br/>normalized x: " + x;
+					output.innerHTML = "x: " + position[0] + "<br/>y: " + position[1] + "<br/>z: " + position[2] + "<br/>normalized y: " + y + "<br/>height: " + roomHeight + "<br/>old frequency:  + tone.freq.value + <br/>new frequency: " + defaultFrequency * y + "<br/>normalized x: " + x;
 				}
 
-				frequency = 64 * y;
+				if (block==false) {frequency = 64 * y;};
+				
 				//tone.freq.value = defaultFrequency * y;
 
 				//master.setParams(5, 1, 0, x);
