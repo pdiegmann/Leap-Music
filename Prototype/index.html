@@ -25,6 +25,7 @@
 		var reverb = undefined;
 		var master = undefined;
 		var phaser = undefined;
+		var synth = undefined;
 		var paddingPercentage = 0.15; // padding which surrounds the 'sensitive area'
 		var toggleButton = document.getElementById('toggleButton'); // html-dom-element for play/pause
 		var output = document.getElementById('output'); // html-dom-element for debug-output
@@ -35,21 +36,41 @@
 		var centerFrequency = 261.63; //(maxFrequency + minFrequency) / 2;
 
 		(function() {
-			tone = T("sin", {freq: centerFrequency}) // the default 'center' tone
+			/*tone = T("sin", {freq: centerFrequency}) // the default 'center' tone
 			var freq = T("sin", {freq:0.0001, add:2400, mul:800}).kr();
   			phaser = T("phaser", {freq:freq, Q:1, steps:8}, tone)
 			reverb = T("reverb", {room:0.4, mix:0.35}, phaser);
 			master = T("eq", {}, reverb).play();
-			tone = tone.set({buddies:master});
-			var defaultFrequency = tone.freq.value; // the default tone's frequency
+			tone = tone.set({buddies:master});*/
+			var defaultFrequency = 0; //tone.freq.value; // the default tone's frequency
+			var frequency = 0;
 			//pause();
 
+			synth = T("SynthDef", {poly: 1}).play();
+
+			synth.def = function(opts) {
+				var VCO = T("saw", {freq:opts.freq});
+
+				var cutoff = T("env", {table:[8000, [opts.freq, 500]]}).bang();
+				var VCF    = T("lpf", {cutoff:cutoff, Q:5}, VCO);
+
+				var EG  = T("adsr", {a:150, d:500, s:0.45, r:1500, lv:0.6});
+				var VCA = EG.append(VCF).bang();
+
+				return VCA;
+			};
+
+
 			if (emulateLeapMotion == true) {
+				function handleMouseClick(event) {
+					synth.noteOn(frequency);
+				}
 			    function handleMouseMove(event) {
 			        event = event || window.event; // IE-ism
 			        processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
 			    }
 		   		window.onmousemove = handleMouseMove;
+		   		document.body.onclick = handleMouseClick;
 			}
 			else {
 				Leap.loop(function (frame) {
@@ -57,12 +78,26 @@
 						var hands = frame.hands;
 						var interactionBox = frame.interactionBox;
 						if (interactionBox != undefined && hands != undefined && hands.length > 0) {
-							var hand = hands[0];
-							if (hand != undefined) {
+							var righthand = hand[0];
+							if (hands.length > 1) {
+								var lefthand = hand[1];
+
+								if (lefthand.palmPosition.x > righthand.palmPosition.x) {
+									var dummy = lefthand;
+									lefthand = righthand;
+									righthand = dummy;
+								}
+							}
+
+							if (righthand != undefined) {
 								var position = hand.palmPosition;
 								var height = interactionBox.height;
 								var width = interactionBox.width;
 								processPositionChange(position, height, width);
+
+								if (lefthand != undefined && lefthand.palmVelocity.z > 10.0) {
+									synth.noteOn(frequency);
+								}
 							}
 						}
 					}
@@ -99,14 +134,15 @@
 
 				//console.log("x, y, z: " + position[0] + ", " + position[1] + ", " + position[2] + " normalized y: " + y + " height: " + roomHeight + " freq: " + defaultFrequency + " -> " + defaultFrequency * y);
 				if (output != undefined) {
-					output.innerHTML = "x: " + position[0] + "<br/>y: " + position[1] + "<br/>z: " + position[2] + "<br/>normalized y: " + y + "<br/>height: " + roomHeight + "<br/>old frequency: " + tone.freq.value + "<br/>new frequency: " + defaultFrequency * y + "<br/>normalized x: " + x;
+					//output.innerHTML = "x: " + position[0] + "<br/>y: " + position[1] + "<br/>z: " + position[2] + "<br/>normalized y: " + y + "<br/>height: " + roomHeight + "<br/>old frequency: " + tone.freq.value + "<br/>new frequency: " + defaultFrequency * y + "<br/>normalized x: " + x;
 				}
 
-				tone.freq.value = defaultFrequency * y;
+				frequency = 64 * y;
+				//tone.freq.value = defaultFrequency * y;
 
 				//master.setParams(5, 1, 0, x);
 
-				master.plot({target:plot, lineWidth:2});
+				//master.plot({target:plot, lineWidth:2});
 			}
 	  	})();
 
