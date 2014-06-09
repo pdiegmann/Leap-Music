@@ -2,9 +2,11 @@ var emulateLeapMotion = true;
 
 function initInput() {
 	if (emulateLeapMotion == true) {
+		var y = undefined;
 		function handleMouseClick(event) {
 			block=true;
-			startNote(frequency);
+			//startNote(frequency);
+			onReceiveInput(y, 0.5);
 		}
 
 		function handleMouseUp(event) {
@@ -14,7 +16,7 @@ function initInput() {
 
 	    function handleMouseMove(event) {
 	        event = event || window.event; // IE-ism
-	        processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
+	        y = processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
 	    }
 
 		window.onmousemove = handleMouseMove;
@@ -44,16 +46,20 @@ function initInput() {
 						var position = righthand.palmPosition;
 						var height = interactionBox.height;
 						var width = interactionBox.width;
-						var frequency = processPositionChange(position, height, width);
+						var y = processPositionChange(position, height, width);
 						
-						var schwelle = 50
+						if (y != undefined) {
+							onReceiveInput(y, righthand.palmSphereRadius);
+						}
+
+						/*var schwelle = 50
 						if (lefthand != undefined && lefthand.palmVelocity[1] > schwelle) {
 							startNote(frequency);
 						}
 						else if(lefthand != undefined && lefthand.palmVelocity[1] < (schwelle*-1))
 						{
 							endNote();
-						}		
+						}*/		
 					}
 				}
 			}
@@ -72,7 +78,7 @@ function processPositionChange(position, roomHeight, roomWidth) {
 	y = y / (1 - (paddingPercentage * 2)); // stretch the room to reach 1 by dividing by 0.8
 	y = y / roomHeight; // normalize to [0..1] by dividing by max value (room's height)
 
-	y = y + 0.5; // add 0.5 to have y in [0.5, 1.5] to multiply with the 'default' tone and have a range between the 'half' and 'oneandahalf' tone
+	y = y + 0.5; // add 0.5 to have y in [0.5..1.5] to multiply with the 'default' tone and have a range between the 'half' and 'oneandahalf' tone
 
 	roomWidth = roomWidth / 2; // highest volume is in the room's center
 	if (x > roomWidth) {
@@ -94,6 +100,8 @@ function processPositionChange(position, roomHeight, roomWidth) {
 	}
 
 	if (block==false) { 
-		return 64 * y;
+		return y;
 	}
+
+	return undefined;
 }
