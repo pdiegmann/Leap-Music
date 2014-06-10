@@ -1,19 +1,20 @@
-var isPlaying = true;
-var block = false;
-var tone = undefined;
-var reverb = undefined;
-var master = undefined;
-var env = undefined;
-var mod = undefined;
-var phaser = undefined;
-var synth = undefined;
-var paddingPercentage = 0.15; // padding which surrounds the 'sensitive area'
-var minVolume = -53;
-var maxVolume = 12;
-var midi = new Array(127);
-
-function initAudible() {
+function Audible() {
+	var isPlaying = true;
+	var tone = undefined;
+	var reverb = undefined;
+	var master = undefined;
+	var env = undefined;
+	var mod = undefined;
+	var phaser = undefined;
+	var synth = undefined;
+	var midi = new Array(127);
 	var a = 440; // a is 440 hz...
+
+	Audible.block = false;
+	Audible.minVolume = -53;
+	Audible.maxVolume = 12;
+	Audible.paddingPercentage = 0.15; // padding which surrounds the 'sensitive area'
+
 	for (var x = 0; x < 127; ++x)
 	{
 		midi[x] = (a / 32) * Math.pow(2, ((x - 9) / 12));
@@ -38,94 +39,94 @@ function initAudible() {
 
 		return VCA;
 	};
-}
 
-function startNote(noteNumber) {
-	if (synth != undefined)
-		synth.noteOn(noteNumber);
-}
-
-function endNote() {
-	if (synth != undefined)
-		synth.allSoundOff();
-}
-
-function pause() {
-	if (tone != undefined)
-		tone.pause();
-	if (synth != undefined)
-		synth.allSoundOff();
-
-	isPlaying = false;
-}
-
-function play() {
-	if (tone != undefined)
-		tone.play();
-
-	isPlaying = true;
-}
-
-function toggle() {
-	isPlaying ? pause() : play();
-}
-
-function normalizeFrequency(freq) {
-	var upperBound = midiNote[126];
-	var lowerBound = midiNote[0];
-	freq = freq - lowerBound;
-	freq = freq / (upperBound - lowerBound);
-	return freq;
-}
-
-function midiToHertz(midiNote) {
-	midiNote = Math.round(midiNote);
-	console.log("note: " + midiNote);
-	if (midiNote <= 0)
-		return midi[0];
-	if (midiNote >= 126)
-		return midi[126];
-	return midi[midiNote]
-}
-
-function hertzToMidi(hertz) {
-	var a = 440; // a is 440 hz...
-	var midiNote = (a / 32) * Math.pow(2, ((hertz - 9) / 12));
-	if (midiNote <= 0)
-		return 0;
-	if (midiNote >= 126)
-		return 126;
-	return midiNote;
-}
-
-function normalizedToMidi(normalized) {
-	if (normalized <= 0)
-		return midi[0];
-	if (normalized >= 1)
-		return midi[126];
-
-	return midi[Math.round(normalized * 126, 0)]
-}
-
-function distantNoteFromNormalized(normalized) {
-	if (normalized <= 0)
-		return midi[0];
-	if (normalized >= 1)
-		return midi[126];
-
-	var ceil = Math.ceil(normalized * 126, 0)
-	var floor = Math.floor(normalized * 126, 0)
-
-	if (Math.abs(ceil - normalized * 126) > Math.abs(floor - normalized * 126)) {
-		return ceil;
+	this.startNote = function(noteNumber) {
+		if (synth != undefined)
+			synth.noteOn(noteNumber);
 	}
-	else {
-		return floor;
-	}
-}
 
-function normalizedToHertz(normalized) {
-	var maxHertz = midiToHertz(126);
-	var minHertz = midiToHertz(0);
-	return (maxHertz * normalized) + (minHertz * (1 - normalized));
+	this.endNote = function() {
+		if (synth != undefined)
+			synth.allSoundOff();
+	}
+
+	this.pause = function() {
+		if (tone != undefined)
+			tone.pause();
+		if (synth != undefined)
+			synth.allSoundOff();
+
+		isPlaying = false;
+	}
+
+	this.play = function() {
+		if (tone != undefined)
+			tone.play();
+
+		isPlaying = true;
+	}
+
+	this.toggle = function() {
+		isPlaying ? pause() : play();
+	}
+
+	this.normalizeFrequency = function(freq) {
+		var upperBound = midiNote[126];
+		var lowerBound = midiNote[0];
+		freq = freq - lowerBound;
+		freq = freq / (upperBound - lowerBound);
+		return freq;
+	}
+
+	this.midiToHertz = function(midiNote) {
+		midiNote = Math.round(midiNote);
+		console.log("note: " + midiNote);
+		if (midiNote <= 0)
+			return midi[0];
+		if (midiNote >= 126)
+			return midi[126];
+		return midi[midiNote]
+	}
+
+	this.hertzToMidi = function(hertz) {
+		var a = 440; // a is 440 hz...
+		var midiNote = (a / 32) * Math.pow(2, ((hertz - 9) / 12));
+		if (midiNote <= 0)
+			return 0;
+		if (midiNote >= 126)
+			return 126;
+		return midiNote;
+	}
+
+	this.normalizedToMidi = function(normalized) {
+		if (normalized <= 0)
+			return midi[0];
+		if (normalized >= 1)
+			return midi[126];
+
+		return midi[Math.round(normalized * 126, 0)]
+	}
+
+	this.distantNoteFromNormalized = function(normalized) {
+		if (normalized <= 0)
+			return midi[0];
+		if (normalized >= 1)
+			return midi[126];
+
+		var ceil = Math.ceil(normalized * 126, 0)
+		var floor = Math.floor(normalized * 126, 0)
+
+		if (Math.abs(ceil - normalized * 126) > Math.abs(floor - normalized * 126)) {
+			return ceil;
+		}
+		else {
+			return floor;
+		}
+	}
+
+	this.normalizedToHertz = function(normalized) {
+		var maxHertz = this.midiToHertz(126);
+		var minHertz = this.midiToHertz(0);
+		return (maxHertz * normalized) + (minHertz * (1 - normalized));
+	}
 }

@@ -1,32 +1,41 @@
-function initInterCom() {
+function InterCom() {}
 
+InterCom.audible = undefined;
+InterCom.input = undefined;
+InterCom.visual = undefined;
+InterCom.lastPalmSphereRadiusNormalized = undefined;
+
+InterCom.init = function() {
+	InterCom.audible = new Audible();
+	InterCom.input = new Input();
+	InterCom.visual = new Visual();
 }
 
-var lastPalmSphereRadiusNormalized = undefined;
-
-function onReceiveInput(y, palmSphereRadiusNormalized) {
-	var frequency = normalizedToHertz(y);
-	var note = normalizedToMidi(y);
-	var targetNoteFrequency = midiToHertz(note);
-	var distantNoteFrequency = midiToHertz(distantNoteFromNormalized(y)); // Frequency of the more "distant" Note from our frequency-area
+InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
+	var frequency = InterCom.audible.normalizedToHertz(y);
+	var note = InterCom.audible.normalizedToMidi(y);
+	var targetNoteFrequency = InterCom.audible.midiToHertz(note);
+	var distantNoteFrequency = InterCom.audible.midiToHertz(InterCom.audible.distantNoteFromNormalized(y)); // Frequency of the more "distant" Note from our frequency-area
 	var frequencyDifference = Math.abs(targetNoteFrequency - frequency); // Difference from our current Note to our desired target Note
 	var maxFrequencyDifference = (Math.abs(distantNoteFrequency - targetNoteFrequency) / 2);
 	var accurracy = 1 - (frequencyDifference / maxFrequencyDifference);
 	if (Math.abs(distantNoteFrequency - targetNoteFrequency) == 0) // same notes mean we have a 100% hit
 		accurracy = 1;
 
-	return updateVisual(y, accurracy);
+	return InterCom.visual.updateVisual(y, accurracy);
 
 	if (palmSphereRadiusNormalized <= 0.25) {
-		endNote();
+		InterCom.audible.endNote();
 	}
 	else if (isStroking(palmSphereRadiusNormalized)) {
-		startNote(note);
+		InterCom.audible.startNote(note);
 	}
+
+	Intercom.lastPalmSphereRadiusNormalized = palmSphereRadiusNormalized;
 }
 
-function isStroking(palmSphereRadiusNormalized) {
-	if (lastPalmSphereRadiusNormalized == undefined)
+InterCom.isStroking = function(palmSphereRadiusNormalized) {
+	if (Intercom.lastPalmSphereRadiusNormalized == undefined)
 		return true;
-	return lastPalmSphereRadiusNormalized <= 0.25 && palmSphereRadiusNormalized > 0.25;
+	return Intercom.lastPalmSphereRadiusNormalized <= 0.25 && palmSphereRadiusNormalized > 0.25;
 }
