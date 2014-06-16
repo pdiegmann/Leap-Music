@@ -3,12 +3,18 @@ function InterCom() {}
 InterCom.audible = undefined;
 InterCom.input = undefined;
 InterCom.visual = undefined;
+InterCom.gamestate = undefined;
 InterCom.lastPalmSphereRadiusNormalized = undefined;
 
 InterCom.init = function() {
 	InterCom.audible = new Audible();
 	InterCom.input = new Input();
 	InterCom.visual = new Visual();
+	InterCom.gamestate = new Gamestate();
+}
+
+InterCom.activeView = function() {
+	return InterCom.gamestate.activeView;
 }
 
 InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
