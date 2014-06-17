@@ -8,7 +8,7 @@
 	<script src="js/leap.min.js"></script>
 	<script src="js/timbre.min.js"></script>
 	<script src="js/rainbowvis.js"></script>
-	<script src="js/underscore.min.js"></script>
+	<!--<script src="js/underscore.js"></script>-->
 
 	<script src="js/visual.js"></script>
 	<script src="js/audible.js"></script>
@@ -19,16 +19,11 @@
 </head>
 <body>
 	<div id="content">
+		<div id="mainView" class="fullScreenView hidden">
+			<h1><a id="mainView_startGame">Spiel starten...</a></h1>
+		</div>
+		<div id="gameView" class="fullScreenView hidden"></div>
 	</div>
-
-	<!-- TEMPLATES -->
-		<!-- MAIN VIEW -->
-			<script type="text/template" id="tmpl_main_view">
-				<div class="controlContainer absoluteCenter">
-				</div>
-			</script>
-		<!-- EOF MAIN VIEW -->
-	<!-- EOF TEMPPLATES -->
 
 	<script>
 	 	var output = undefined;

@@ -17,12 +17,12 @@ function Visual(initialView) {
 	_init(initialView);
 	animate();
 
-	function _init(initialView) {
+	function _init(gameView) {
 		renderer = new THREE.WebGLRenderer();
 		//renderer = new THREE.CanvasRenderer();
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		renderer.physicallyBasedShading = true;
-		initialView.getDomElement().appendChild( renderer.domElement );
+		gameView.getDomElement().appendChild( renderer.domElement );
 
 		// scene
 		scene = new THREE.Scene();

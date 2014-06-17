@@ -5,17 +5,20 @@ function Input() {
 	if (emulateLeapMotion == true) {
 		var y = undefined;
 		function handleMouseClick(event) {
+			if (!InterCom.gamestate.gameActive) return;
 			Audible.block=true;
 			//startNote(frequency);
 			InterCom.onReceiveInput(y, 0.5);
 		}
 
 		function handleMouseUp(event) {
+			if (!InterCom.gamestate.gameActive) return;
 			InterCom.onReceiveInput(y, 0.0);
 			Audible.block=false;
 		}
 
 	    function handleMouseMove(event) {
+	    	if (!InterCom.gamestate.gameActive) return;
 	        event = event || window.event; // IE-ism
 	        y = processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
 	    }
@@ -26,6 +29,7 @@ function Input() {
 	}
 	else {
 		Leap.loop(function (frame) {
+			if (!InterCom.gamestate.gameActive) return;
 			if (frame != undefined) {
 				var hands = frame.hands;
 				var interactionBox = frame.interactionBox;

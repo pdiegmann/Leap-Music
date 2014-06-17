@@ -7,15 +7,15 @@ InterCom.gamestate = undefined;
 InterCom.lastPalmSphereRadiusNormalized = undefined;
 
 InterCom.init = function() {
-	_.templateSettings.variable = "obj";
+	//_.templateSettings.variable = "obj";
 	InterCom.audible = new Audible();
 	InterCom.input = new Input();
 	InterCom.gamestate = new Gamestate();
-	InterCom.visual = new Visual(InterCom.gamestate.getActiveView());
+	InterCom.visual = new Visual(InterCom.gamestate.getGameView());
 }
 
 InterCom.activeView = function() {
-	return InterCom.gamestate.activeView;
+	return InterCom.gamestate.getActiveView();
 }
 
 InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
