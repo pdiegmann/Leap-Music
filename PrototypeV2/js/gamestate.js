@@ -1,7 +1,7 @@
 function Gamestate() {
 	this.viewStack = new Array();
 
-	this.activeView = function() {
+	this.getActiveView = function() {
 		if (!this.viewStack)
 			return undefined;
 		if (this.viewStack.length <= 0)
@@ -19,7 +19,7 @@ function Gamestate() {
 	};
 
 	this.pushView = function(view) {
-		var activeView = this.activeView();
+		var activeView = this.getActiveView();
 		if (activeView)
 			activeView.pushOnTop(view);
 		this.viewStack.push(view);

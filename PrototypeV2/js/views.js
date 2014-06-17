@@ -5,10 +5,15 @@
  **/
 
 function View() {
+	this.template = _.template(
+    	$('#' + this.domId).html()
+    );
 };
 
 // the DOM-Template-Element id in our HTML
 View.prototype.domId = undefined;
+
+View.prototype.template = undefined;
 
 // pop's a view from the stack and animates it's slide out
 View.prototype.pop = function() {
@@ -21,11 +26,16 @@ View.prototype.pushOnTop = function(viewOnTop) {
 	
 };
 
+View.prototype.getDomElement = function() {
+	return document.getElementById(this.domId);
+}
+
 /**
  * Main View
  **/
 
 function MainView() {
+	this.domId = "tmpl_main_view";
 	View.prototype.constructor.call();
 };
 

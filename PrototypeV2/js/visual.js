@@ -1,4 +1,4 @@
-function Visual() {
+function Visual(initialView) {
 	var mesh, renderer, scene, camera, controls, material;
 	var t = 0, ambientFactor, canvas, textureImage;
 	var frequencyColourSpectrum = undefined;
@@ -14,15 +14,15 @@ function Visual() {
 	accurracyColourSpectrum.setSpectrum('red', 'yellow', 'green');
 	accurracyColourSpectrum.setNumberRange(0, 1);
 
-	_init();
+	_init(initialView);
 	animate();
 
-	function _init() {
+	function _init(initialView) {
 		renderer = new THREE.WebGLRenderer();
 		//renderer = new THREE.CanvasRenderer();
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		renderer.physicallyBasedShading = true;
-		document.body.appendChild( renderer.domElement );
+		initialView.getDomElement().appendChild( renderer.domElement );
 
 		// scene
 		scene = new THREE.Scene();
