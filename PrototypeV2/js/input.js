@@ -20,12 +20,14 @@ function Input() {
 	    function handleMouseMove(event) {
 	    	if (!InterCom.gamestate.gameActive) return;
 	        event = event || window.event; // IE-ism
-	        y = processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
+	        var temp = processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
+	        if (temp != undefined)
+	        	y = temp;
 	    }
 
 		window.onmousemove = handleMouseMove;
 		document.body.onmousedown = handleMouseClick;
-		document.body. onmouseup = handleMouseUp;
+		document.body.onmouseup = handleMouseUp;
 	}
 	else {
 		Leap.loop(function (frame) {
@@ -104,6 +106,11 @@ function Input() {
 		}
 
 		if (Audible.block==false) { 
+			y = y - 0.5;
+			if (y < 0)
+				y = 0;
+			if (y > 1)
+				y = 1;
 			return y;
 		}
 

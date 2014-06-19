@@ -7,7 +7,10 @@ function Audible() {
 	var mod = undefined;
 	var phaser = undefined;
 	var synth = undefined;
-	var midi = new Array(127);
+	var numNotes = 16;
+	var firstNote = 22;
+	var lastNote = numNotes + firstNote;
+	var midi = new Array(numNotes + 1);
 	var a = 440; // a is 440 hz...
 
 	Audible.block = false;
@@ -15,9 +18,9 @@ function Audible() {
 	Audible.maxVolume = 12;
 	Audible.paddingPercentage = 0.15; // padding which surrounds the 'sensitive area'
 
-	for (var x = 0; x < 127; ++x)
+	for (var x = firstNote; x < lastNote; ++x)
 	{
-		midi[x] = (a / 32) * Math.pow(2, ((x - 9) / 12));
+		midi[x - firstNote] = (a / 32) * Math.pow(2, ((x - 9) / 12));
 	}
 
 	var defaultFrequency = 0; //tone.freq.value; // the default tone's frequency
@@ -71,7 +74,7 @@ function Audible() {
 	}
 
 	this.normalizeFrequency = function(freq) {
-		var upperBound = midiNote[126];
+		var upperBound = midiNote[numNotes - 1];
 		var lowerBound = midiNote[0];
 		freq = freq - lowerBound;
 		freq = freq / (upperBound - lowerBound);
@@ -80,11 +83,11 @@ function Audible() {
 
 	this.midiToHertz = function(midiNote) {
 		midiNote = Math.round(midiNote);
-		console.log("note: " + midiNote);
+		//console.log("note: " + midiNote);
 		if (midiNote <= 0)
 			return midi[0];
-		if (midiNote >= 126)
-			return midi[126];
+		if (midiNote >= numNotes - 1)
+			return midi[numNotes - 1];
 		return midi[midiNote]
 	}
 
@@ -93,8 +96,8 @@ function Audible() {
 		var midiNote = (a / 32) * Math.pow(2, ((hertz - 9) / 12));
 		if (midiNote <= 0)
 			return 0;
-		if (midiNote >= 126)
-			return 126;
+		if (midiNote >= numNotes - 1)
+			return numNotes - 1;
 		return midiNote;
 	}
 
@@ -102,21 +105,21 @@ function Audible() {
 		if (normalized <= 0)
 			return midi[0];
 		if (normalized >= 1)
-			return midi[126];
+			return midi[numNotes - 1];
 
-		return midi[Math.round(normalized * 126, 0)]
+		return midi[Math.round(normalized * (numNotes - 1), 0)]
 	}
 
 	this.distantNoteFromNormalized = function(normalized) {
 		if (normalized <= 0)
 			return midi[0];
 		if (normalized >= 1)
-			return midi[126];
+			return midi[numNotes - 1];
 
-		var ceil = Math.ceil(normalized * 126, 0)
-		var floor = Math.floor(normalized * 126, 0)
+		var ceil = Math.ceil(normalized * (numNotes - 1), 0)
+		var floor = Math.floor(normalized * (numNotes - 1), 0)
 
-		if (Math.abs(ceil - normalized * 126) > Math.abs(floor - normalized * 126)) {
+		if (Math.abs(ceil - normalized * (numNotes - 1)) > Math.abs(floor - normalized * (numNotes - 1))) {
 			return ceil;
 		}
 		else {
@@ -125,7 +128,7 @@ function Audible() {
 	}
 
 	this.normalizedToHertz = function(normalized) {
-		var maxHertz = this.midiToHertz(126);
+		var maxHertz = this.midiToHertz(numNotes - 1);
 		var minHertz = this.midiToHertz(0);
 		return (maxHertz * normalized) + (minHertz * (1 - normalized));
 	}

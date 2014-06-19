@@ -18,6 +18,7 @@ InterCom.activeView = function() {
 	return InterCom.gamestate.getActiveView();
 }
 
+var counter = 0;
 InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 	var frequency = InterCom.audible.normalizedToHertz(y);
 	var note = InterCom.audible.normalizedToMidi(y);
@@ -29,20 +30,26 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 	if (Math.abs(distantNoteFrequency - targetNoteFrequency) == 0) // same notes mean we have a 100% hit
 		accurracy = 1;
 
-	return InterCom.visual.updateVisual(y, accurracy);
+	console.log(note, accurracy);
+
+	if (counter % 10 == 0) {
+		counter = 1;
+		InterCom.visual.updateVisual(y, accurracy);
+	}
 
 	if (palmSphereRadiusNormalized <= 0.25) {
 		InterCom.audible.endNote();
 	}
-	else if (isStroking(palmSphereRadiusNormalized)) {
+	else if (InterCom.isStroking(palmSphereRadiusNormalized)) {
 		InterCom.audible.startNote(note);
 	}
 
-	Intercom.lastPalmSphereRadiusNormalized = palmSphereRadiusNormalized;
+	InterCom.lastPalmSphereRadiusNormalized = palmSphereRadiusNormalized;
+	counter++;
 }
 
 InterCom.isStroking = function(palmSphereRadiusNormalized) {
-	if (Intercom.lastPalmSphereRadiusNormalized == undefined)
+	if (InterCom.lastPalmSphereRadiusNormalized == undefined)
 		return true;
-	return Intercom.lastPalmSphereRadiusNormalized <= 0.25 && palmSphereRadiusNormalized > 0.25;
+	return InterCom.lastPalmSphereRadiusNormalized <= 0.25 && palmSphereRadiusNormalized > 0.25;
 }
