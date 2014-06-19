@@ -1,11 +1,13 @@
 function Input() {
 
-	var emulateLeapMotion = true;
+	this.emulateLeapMotion = true;
 
-	if (emulateLeapMotion == true) {
+	if (this.emulateLeapMotion == true) {
 		var y = undefined;
+		var isPressed = false;
 		function handleMouseClick(event) {
 			if (!InterCom.gamestate.gameActive) return;
+			isPressed = true;
 			Audible.block=true;
 			//startNote(frequency);
 			InterCom.onReceiveInput(y, 0.5);
@@ -13,16 +15,31 @@ function Input() {
 
 		function handleMouseUp(event) {
 			if (!InterCom.gamestate.gameActive) return;
-			InterCom.onReceiveInput(y, 0.0);
+			isPressed = false;
 			Audible.block=false;
+			InterCom.onReceiveInput(y, 0.0);
 		}
 
+		var counter = 0;
 	    function handleMouseMove(event) {
 	    	if (!InterCom.gamestate.gameActive) return;
+
+	    	if (counter % 2 == 0) {
+	    		counter = 0;
+	    	}
+	    	else {
+	        	counter++;
+	    		return;
+	    	}
+
 	        event = event || window.event; // IE-ism
 	        var temp = processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
 	        if (temp != undefined)
 	        	y = temp;
+	        if (isPressed == true)
+	        	InterCom.onReceiveInput(y, 0.5);
+	        
+	        counter++;
 	    }
 
 		window.onmousemove = handleMouseMove;
@@ -101,19 +118,19 @@ function Input() {
 		x = x * (Audible.maxVolume + (Audible.minVolume * -1));
 		x = x - (Audible.minVolume * -1);
 
-		if (output != undefined) {
+		/*if (output != undefined) {
 			output.innerHTML = "x: " + position[0] + "<br/>y: " + position[1] + "<br/>z: " + position[2] + "<br/>normalized y: " + y + "<br/>height: " + roomHeight + "<br/>old frequency:  + tone.freq.value + <br/>new frequency: " + defaultFrequency * y + "<br/>normalized x: " + x;
-		}
+		}*/
 
-		if (Audible.block==false) { 
+		//if (Audible.block==false) { 
 			y = y - 0.5;
 			if (y < 0)
 				y = 0;
 			if (y > 1)
 				y = 1;
 			return y;
-		}
+		//}
 
 		return undefined;
 	}
-}
+}	

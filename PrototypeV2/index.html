@@ -19,6 +19,9 @@
 </head>
 <body>
 	<div id="content">
+		<div id="output">
+			
+		</div>
 		<div id="mainView" class="fullScreenView hidden">
 			<h1><a id="mainView_startGame">Spiel starten...</a></h1>
 		</div>
@@ -26,7 +29,7 @@
 	</div>
 
 	<script>
-	 	var output = undefined;
+	 	var output = document.getElementById('output');
 	 	window.onload = function() {
 	 		InterCom.init();
 	 	};

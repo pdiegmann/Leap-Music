@@ -7,8 +7,8 @@ function Audible() {
 	var mod = undefined;
 	var phaser = undefined;
 	var synth = undefined;
-	var numNotes = 16;
-	var firstNote = 22;
+	var numNotes = 8; //16;
+	var firstNote = 30; //22;
 	var lastNote = numNotes + firstNote;
 	var midi = new Array(numNotes + 1);
 	var a = 440; // a is 440 hz...
@@ -25,11 +25,11 @@ function Audible() {
 
 	var defaultFrequency = 0; //tone.freq.value; // the default tone's frequency
 	synth = T("SynthDef", {poly: 1}).play();
-	env = T("sin", {d:3000, s:0, r:600});
+	//env = T("sin", {d:3000, s:0, r:600});
 	master = synth;
-	mod = T("sin", {freq:2, add:3200, mul:800, kr:1});
+	//mod = T("sin", {freq:2, add:3200, mul:800, kr:1});
 	master = T("eq", {params:{lf:[800, 0.5, -2], mf:[6400, 0.5, 4]}}, master);
-	master = T("phaser", {freq:mod, Q:2, steps:4}, master);
+	//master = T("phaser", {freq:mod, Q:2, steps:4}, master);
 
 	synth.def = function(opts) {
 		var VCO = T("saw", {freq:opts.freq});
@@ -107,7 +107,7 @@ function Audible() {
 		if (normalized >= 1)
 			return midi[numNotes - 1];
 
-		return midi[Math.round(normalized * (numNotes - 1), 0)]
+		return Math.round(midi[Math.round(normalized * (numNotes - 1), 0)]);
 	}
 
 	this.distantNoteFromNormalized = function(normalized) {
