@@ -1,0 +1,65 @@
+<html>
+<head>
+	<link href="css/style.css" rel="stylesheet" />
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery-migrate.min.js"></script>
+	<script src="js/three.min.js"></script>
+	<script src="js/leap.min.js"></script>
+	<script src="js/timbre.min.js"></script>
+	<script src="js/rainbowvis.js"></script>
+	<!--<script src="js/underscore.js"></script>-->
+
+	<script src="js/visual.js"></script>
+	<script src="js/audible.js"></script>
+	<script src="js/intercom.js"></script>
+	<script src="js/input.js"></script>
+	<script src="js/views.js"></script>
+	<script src="js/gamestate.js"></script>
+	
+	<script src="js/play.js"></script>    
+	<script src="js/music.js"></script>
+	<script src="music/songs.js"></script>
+	
+	
+	<script type="text/javascript"> 
+glueckwunsch = "Glückwunsch! Song beendet.";	
+	
+
+document.onkeydown = Play.Push;
+document.onkeyup = Play.Normal;
+</script>
+	
+	
+	
+</head>
+<body>
+<!--
+	<div id="content">
+		<div id="output">
+
+		</div>
+		<div id="mainView" class="fullScreenView hidden">
+			<h1><a id="mainView_startGame">Spiel starten...</a></h1>
+		</div>
+		<div id="gameView" class="fullScreenView hidden"></div>
+	</div>
+	-->
+
+	<script>
+	 	var output = document.getElementById('output');
+	 	window.onload = function() {
+	 	      Music.initSong("lala"); 
+		};
+		
+		
+
+		
+	</script>
+	
+	Dr&uuml;cke eine Taste, um einen Ton zu erzeugen!
+	<form action="" name="formular">
+<p><input type="text" name="ausgabe" readonly="readonly" size="50"></p>
+<input type="submit" onclick="Play.startAgain" value="Nochmal?"/>
+</form>
+</body>
