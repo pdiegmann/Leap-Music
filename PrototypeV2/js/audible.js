@@ -7,8 +7,8 @@ function Audible() {
 	var mod = undefined;
 	var phaser = undefined;
 	var synth = undefined;
-	var numNotes = 8; //16;
-	var firstNote = 30; //22;
+	var numNotes = 16; //16;
+	var firstNote = 50; //22;
 	var lastNote = numNotes + firstNote;
 	var midi = new Array(numNotes);
 	var a = 440; // a is 440 hz...
@@ -28,6 +28,7 @@ function Audible() {
 	}*/
 
 	var defaultFrequency = 0; //tone.freq.value; // the default tone's frequency
+	tone=T("sin");
 	synth = T("SynthDef", {poly: 1}).play();
 	//env = T("sin", {d:3000, s:0, r:600});
 	master = synth;
@@ -48,11 +49,15 @@ function Audible() {
 	};
 
 	this.startNote = function(noteNumber) {
-		if (synth != undefined)
-			synth.noteOn(noteNumber);
+		//tone.pause();
+		tone.freq=this.midiToHertz(noteNumber);
+		tone.play();
+		//if (synth != undefined)
+			//synth.noteOn(noteNumber);
 	}
 
 	this.endNote = function() {
+		tone.pause();
 		if (synth != undefined)
 			synth.allSoundOff();
 	}
@@ -149,8 +154,9 @@ function Audible() {
 	}
 
 	this.normalizedToHertz = function(normalized) {
-		var maxHertz = midi[numNotes - 1];
-		var minHertz = midi[0];
-		return (maxHertz * normalized) + (minHertz * (1 - normalized));
+		return (a / 32) * Math.pow(2, ((normalized - 9) / 12));
+		//var maxHertz = midi[numNotes - 1];
+		//var minHertz = midi[0];
+		//return (maxHertz * normalized) + (minHertz * (1 - normalized));
 	}
 }

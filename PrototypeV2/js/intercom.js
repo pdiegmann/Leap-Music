@@ -44,7 +44,7 @@ InterCom.activeView = function() {
 
 InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 	var frequency = InterCom.playerTrack.normalizedToHertz(y);
-	
+
 	InterCom.gamestate.palmSphereRadiusNormalized = palmSphereRadiusNormalized;
 	if (InterCom.gamestate.lastPalmSphereRadiusNormalized > 0.25 && palmSphereRadiusNormalized <= 0.25) {
 		InterCom.needsAudioUpdate = true;
@@ -56,11 +56,10 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 
 	var note = InterCom.playerTrack.normalizedToMidi(y);
 	var targetNoteFrequency = undefined;
-	
-	if (InterCom.gamestate.gameMode == 1) { 
+
+	if (InterCom.gamestate.gameMode == 1) {
 		targetNoteFrequency = InterCom.music.note;
-	}
-	else {
+	} else {
 		targetNoteFrequency = InterCom.playerTrack.midiToHertz(note);
 	}
 
@@ -76,7 +75,7 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 	InterCom.verticalPosition = y;
 	InterCom.note = note;
 	InterCom.frequency = frequency;
-	
+
 	InterCom.needsVisualUpdate = true;
 
 	if (InterCom.isStroking(palmSphereRadiusNormalized)) {
@@ -98,9 +97,8 @@ InterCom.doAudioLoop = function() {
 	if (InterCom.gamestate.palmSphereRadiusNormalized <= 0.25) {
 		InterCom.playerTrack.endNote();
 		console.log("ended");
-	}
-	else if (InterCom.gamestate.dynamicNote || (!InterCom.gamestate.dynamicNote && InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized))) {
-		InterCom.playerTrack.endNote();
+	} else if (InterCom.gamestate.dynamicNote || (!InterCom.gamestate.dynamicNote && InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized))) {
+		//InterCom.playerTrack.endNote();
 		InterCom.playerTrack.startNote(InterCom.note);
 		if (InterCom.gamestate.gameMode == 1 && false)
 			InterCom.music.playNote(InterCom.backgroundTrack);

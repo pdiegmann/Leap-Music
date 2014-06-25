@@ -1,79 +1,89 @@
 function Input() {
 
-	this.emulateLeapMotion = true;
+	this.emulateLeapMotion = false;
 
 	if (this.emulateLeapMotion == true) {
 		var y = undefined;
 		var isPressed = false;
+
 		function handleMouseClick(event) {
 			if (!InterCom.gamestate.gameActive) return;
 			isPressed = true;
-			Audible.block=true;
+			Audible.block = true;
 			InterCom.onReceiveInput(y, 0.5);
 		}
 
 		function handleMouseUp(event) {
 			if (!InterCom.gamestate.gameActive) return;
 			isPressed = false;
-			Audible.block=false;
+			Audible.block = false;
 			InterCom.onReceiveInput(y, 0.0);
 		}
 
 		var counter = 0;
-	    function handleMouseMove(event) {
-	    	if (!InterCom.gamestate.gameActive) return;
 
-	    	if (counter % 2 == 0) {
-	    		counter = 0;
-	    	}
-	    	else {
-	        	counter++;
-	    		return;
-	    	}
+		function handleMouseMove(event) {
+			if (!InterCom.gamestate.gameActive) return;
 
-	        event = event || window.event; // IE-ism
-	        var temp = processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
-	        if (temp != undefined)
-	        	y = temp;
-	        if (isPressed == true) {
-	        	InterCom.onReceiveInput(y, 0.5);
-	        }
-	        
-	        counter++;
-	    }
+			if (counter % 2 == 0) {
+				counter = 0;
+			} else {
+				counter++;
+				return;
+			}
+
+			event = event || window.event; // IE-ism
+			var temp = processPositionChange([event.clientX, window.innerHeight - event.clientY, 0], window.innerHeight, window.innerWidth);
+			if (temp != undefined)
+				y = temp;
+			if (isPressed == true) {
+				InterCom.onReceiveInput(y, 0.5);
+			}
+
+			counter++;
+		}
 
 		window.onmousemove = handleMouseMove;
 		document.body.onmousedown = handleMouseClick;
 		document.body.onmouseup = handleMouseUp;
-	}
-	else {
-		Leap.loop(function (frame) {
+	} else {
+		Leap.loop(function(frame) {
 			if (!InterCom.gamestate.gameActive) return;
 			if (frame != undefined) {
 				var hands = frame.hands;
 				var interactionBox = frame.interactionBox;
-				
+
 				if (interactionBox != undefined && hands != undefined && hands.length > 0) {
 					var lefthand = hands[0];
-					
-					if (hands.length > 1) {
-						var righthand = hands[1];
+					var righthand = hands[0];
 
-						if (lefthand.palmPosition[0] > righthand.palmPosition[0]) {
+					if (hands.length > 1) {
+						righthand = hands[1];
+
+						if (lefthand.type=='right') {
 							var dummy = lefthand;
 							lefthand = righthand;
 							righthand = dummy;
 						}
+
 					}
 
 					if (righthand != undefined) {
 						var position = righthand.palmPosition;
-						var height = interactionBox.height;
+						var height = interactionBox.height*1.5;
 						var width = interactionBox.width;
 						var y = processPositionChange(position, height, width);
-						
+
 						if (y != undefined) {
-							InterCom.onReceiveInput(y, righthand.palmSphereRadius);
+							var sphereRadiusNormalized = righthand.sphereRadius;
+							sphereRadiusNormalized = sphereRadiusNormalized - 70;
+							sphereRadiusNormalized = sphereRadiusNormalized / 70
+							if (sphereRadiusNormalized < 0) {
+								sphereRadiusNormalized = 0;
+							} else if (sphereRadiusNormalized > 1) {
+								sphereRadiusNormalized = 1;
+							}
+							InterCom.onReceiveInput(y, sphereRadiusNormalized);
 						}
 
 						/*var schwelle = 50
@@ -83,7 +93,7 @@ function Input() {
 						else if(lefthand != undefined && lefthand.palmVelocity[1] < (schwelle*-1))
 						{
 							endNote();
-						}*/		
+						}*/
 					}
 				}
 			}
@@ -123,14 +133,14 @@ function Input() {
 		}*/
 
 		//if (Audible.block==false) { 
-			y = y - 0.5;
-			if (y < 0)
-				y = 0;
-			if (y > 1)
-				y = 1;
-			return y;
+		y = y - 0.5;
+		if (y < 0)
+			y = 0;
+		if (y > 1)
+			y = 1;
+		return y;
 		//}
 
 		return undefined;
 	}
-}	
+}
