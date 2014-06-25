@@ -51,6 +51,21 @@ function MainView() {
 		InterCom.activeView().pushOnTop(InterCom.gamestate.getGameView());
 		InterCom.gamestate.gameActive = true;
 	});
+	$('#mainView_showSettings').click(function() {
+		$('#mainView').hide();
+		$('#settingsView').show();
+	});
+	$('#mainView_showSettings_back').click(function() {
+		$('#mainView').show();
+		$('#settingsView').hide();
+	});
+	$('#submit').click(function() {
+		alert(document.getElementById("select_notes").value);
+		alert(document.getElementById("select_firstNote").value);
+	});
+
+	
+
 
 	return new View("mainView");
 }

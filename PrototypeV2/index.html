@@ -30,13 +30,35 @@
 			<hr/>
 			<h1>Song-Datei wählen: <input type="file" id="songFile" name="songFile" /></h1>
 			<h1><a class="hidden" id="mainView_startScoreGame">Spiel starten...</a></h1>
+			<hr />
+			<h1><a id="mainView_showSettings">Einstellungen</a></h1>
 		</div>
 		<div id="gameView" class="fullScreenView hidden"></div>
-	</div>
 
-	<script>
-	 	var output = document.getElementById('output');
-	 	window.onload = function() {
+		<div id="settingsView" class="fullScreenView hidden">
+			<form method="post" action="">
+				<label for="select_notes">Anzahl der Noten auswählen</label>
+				<select id="select_notes">
+					<option value="8">8</option>
+					<option value="16">16</option>
+				</select>
+				<br />
+				<label for="select_firstNote">Anzahl der Noten auswählen</label>
+				<select id="select_firstNote">
+					<option value="40">40</option>
+					<option value="50">50</option>
+				</select>
+				<br />
+				<input type="button" id="submit" value="Speichern" />
+			</form>
+			<hr />
+			<h1><a id="mainView_showSettings_back">Zurück</a></h1></div>
+		</div>
+
+
+		<script>
+		var output = document.getElementById('output');
+		window.onload = function() {
 		// Check for the various File API support.
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 			// Great success! All the File APIs are supported.
@@ -52,19 +74,20 @@
 				    	return function(e) {
 				    		InterCom.music.initSong(JSON.parse(e.target.result));
 				    		$('#mainView_startScoreGame').show();
+
 				    	}
 				    })(f);
 
 				    // Read in the image file as a data URL.
-      				reader.readAsText(f);
-			    }
+				    reader.readAsText(f);
+				}
 			}
 			document.getElementById('songFile').addEventListener('change', handleFileSelect, false);
 		} else {
 			alert('The File APIs are not fully supported in this browser.');
 			$('#songFile').hide();
 		}
-	 		InterCom.init();
-	 	};
+		InterCom.init();
+	};
 	</script>
 </body>
