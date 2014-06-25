@@ -51,8 +51,8 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 		targetNoteFrequency = Music.playNote();
 	}
 	else {
-		console.log(note);
 		targetNoteFrequency = InterCom.audible.midiToHertz(note);
+		console.log(note, targetNoteFrequency);
 	}
 
 	var distantNoteFrequency = InterCom.audible.midiToHertz(InterCom.audible.distantNoteFromNormalized(y)); // Frequency of the more "distant" Note from our frequency-area
