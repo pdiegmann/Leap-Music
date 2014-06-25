@@ -33,5 +33,5 @@ Play.Normal = function (Ereignis) {
 }
 
 Play.startAgain =function () {
-    Music.initSong("lala");
+    Music.initSong("entchen");
 }

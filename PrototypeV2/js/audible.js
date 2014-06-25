@@ -10,7 +10,7 @@ function Audible() {
 	var numNotes = 8; //16;
 	var firstNote = 30; //22;
 	var lastNote = numNotes + firstNote;
-	var midi = new Array(numNotes + 1);
+	var midi = new Array(127);//numNotes + 1);
 	var a = 440; // a is 440 hz...
 
 	Audible.block = false;
@@ -18,10 +18,15 @@ function Audible() {
 	Audible.maxVolume = 12;
 	Audible.paddingPercentage = 0.15; // padding which surrounds the 'sensitive area'
 
-	for (var x = firstNote; x < lastNote; ++x)
+	/*for (var x = firstNote; x < lastNote; ++x)
 	{
 		midi[x - firstNote] = (a / 32) * Math.pow(2, ((x - 9) / 12));
+	}*/
+	for (var x = 0; x < 126; ++x)
+	{
+		midi[x] = (a / 32) * Math.pow(2, ((x - 9) / 12));
 	}
+	console.log(midi);
 
 	var defaultFrequency = 0; //tone.freq.value; // the default tone's frequency
 	synth = T("SynthDef", {poly: 1}).play();

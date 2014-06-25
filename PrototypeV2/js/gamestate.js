@@ -4,6 +4,7 @@ function Gamestate() {
 	this.palmSphereRadiusNormalized = undefined;
 	this.dynamicNote = true; // true == movement with hand results in change in frequency, even after stroke
 	this.currentScore = 0;
+	this.gameMode = -1; // -1 no game mode specified, 0 free game, 1 score game
 
 	this.getCurrentNote = function() {
 		// TODO get current note from song at current time

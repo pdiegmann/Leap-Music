@@ -16,6 +16,7 @@
 	<script src="js/input.js"></script>
 	<script src="js/views.js"></script>
 	<script src="js/gamestate.js"></script>
+	<script src="js/Music.js"></script>
 </head>
 <body>
 	<div id="content">
@@ -23,7 +24,10 @@
 			
 		</div>
 		<div id="mainView" class="fullScreenView hidden">
-			<h1><a id="mainView_startGame">Spiel starten...</a></h1>
+			<h1><a id="mainView_startFreeGame">Freies Spiel starten...</a></h1>
+			<hr/>
+			<h1>Song-Datei wählen: <input type="file" id="songFile" name="songFile" /></h1>
+			<h1><a class="hidden" id="mainView_startScoreGame">Spiel starten...</a></h1>
 		</div>
 		<div id="gameView" class="fullScreenView hidden"></div>
 	</div>
@@ -31,6 +35,33 @@
 	<script>
 	 	var output = document.getElementById('output');
 	 	window.onload = function() {
+		// Check for the various File API support.
+		if (window.File && window.FileReader && window.FileList && window.Blob) {
+			// Great success! All the File APIs are supported.
+			document.getElementById('songFile').addEventListener('change', handleFileSelect, false);
+			function handleFileSelect(evt) {
+			    var files = evt.target.files; // FileList object
+
+			    // Loop through the FileList and render image files as thumbnails.
+			    for (var i = 0, f; f = files[i]; i++) {
+			    	var reader = new FileReader();
+
+				    // Closure to capture the file information.
+				    reader.onload = (function(theFile) {
+				    	return function(e) {
+				    		Music.initSong(JSON.parse(e.target.result));
+				    		$('#mainView_startScoreGame').show();
+				    	}
+				    })(f);
+
+				    // Read in the image file as a data URL.
+      				reader.readAsText(f);
+			    }
+			}
+		} else {
+			alert('The File APIs are not fully supported in this browser.');
+			$('#songFile').hide();
+		}
 	 		InterCom.init();
 	 	};
 	</script>

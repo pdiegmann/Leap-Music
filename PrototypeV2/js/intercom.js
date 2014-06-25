@@ -5,10 +5,10 @@ InterCom.input = undefined;
 InterCom.visual = undefined;
 InterCom.gamestate = undefined;
 
-
 InterCom.verticalPosition = undefined;
 InterCom.frequency = undefined;
 InterCom.accurracy = undefined;
+InterCom.targetNoteFrequency = undefined;
 InterCom.note = undefined;
 InterCom.needsAudioUpdate = false;
 InterCom.needsVisualUpdate = false;
@@ -45,7 +45,16 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 		return;
 
 	var note = InterCom.audible.normalizedToMidi(y);
-	var targetNoteFrequency = InterCom.audible.midiToHertz(note);
+	var targetNoteFrequency = undefined;
+	
+	if (InterCom.gamestate.gameMode == 1) { 
+		targetNoteFrequency = Music.playNote();
+	}
+	else {
+		console.log(note);
+		targetNoteFrequency = InterCom.audible.midiToHertz(note);
+	}
+
 	var distantNoteFrequency = InterCom.audible.midiToHertz(InterCom.audible.distantNoteFromNormalized(y)); // Frequency of the more "distant" Note from our frequency-area
 	var frequencyDifference = Math.abs(targetNoteFrequency - frequency); // Difference from our current Note to our desired target Note
 	var maxFrequencyDifference = (Math.abs(distantNoteFrequency - targetNoteFrequency) / 2);
@@ -53,6 +62,7 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 	if (Math.abs(distantNoteFrequency - targetNoteFrequency) == 0) // same notes mean we have a 100% hit
 		accurracy = 1;
 
+	InterCom.targetNoteFrequency = targetNoteFrequency;
 	InterCom.accurracy = accurracy;
 	InterCom.verticalPosition = y;
 	InterCom.note = note;
@@ -88,7 +98,8 @@ InterCom.doVisualLoop = function() {
 	InterCom.needsVisualUpdate = false;
 
 	if (output != undefined) {
-		output.innerHTML = "accurracy: " + InterCom.accurracy + "<br/>";
+		output.innerHTML = "target: " + InterCom.targetNoteFrequency + "<br/>";
+		output.innerHTML += "accurracy: " + InterCom.accurracy + "<br/>";
 		output.innerHTML += "frequency: " + InterCom.frequency + "<br/>";
 		output.innerHTML += "note: " + InterCom.note + "<br/>";
 		output.innerHTML += "psrn: " + InterCom.gamestate.palmSphereRadiusNormalized + "<br/>";

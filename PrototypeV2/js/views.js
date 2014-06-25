@@ -40,7 +40,14 @@ View.prototype.getDomElement = function() {
  ***/
 
 function MainView() {
-	$('#mainView_startGame').click(function() {
+	$('#mainView_startFreeGame').click(function() {
+		InterCom.gamestate.gameMode = 0;
+		InterCom.activeView().pushOnTop(InterCom.gamestate.getGameView());
+		InterCom.gamestate.gameActive = true;
+	});
+	$('#mainView_startScoreGame').click(function() {
+		$('#mainView_startScoreGame').hide();
+		InterCom.gamestate.gameMode = 1;
 		InterCom.activeView().pushOnTop(InterCom.gamestate.getGameView());
 		InterCom.gamestate.gameActive = true;
 	});

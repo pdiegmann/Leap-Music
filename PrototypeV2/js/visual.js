@@ -101,8 +101,10 @@ function Visual(initialView) {
 	}
 
 	this.updateVisual = function(frequencyNormalized, accurracyNormalized) {
-		frequencyColour = '#' + frequencyColourSpectrum.colourAt(frequencyNormalized);
-		accurracyColour = '#' + accurracyColourSpectrum.colourAt(accurracyNormalized);
+		if (frequencyNormalized)
+			frequencyColour = '#' + frequencyColourSpectrum.colourAt(frequencyNormalized);
+		if (accurracyNormalized)
+			accurracyColour = '#' + accurracyColourSpectrum.colourAt(accurracyNormalized);
 
 		// material texture
 		var texture = new THREE.Texture( generateTexture() );

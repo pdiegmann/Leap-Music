@@ -42,8 +42,8 @@ Music.getNote = function (note, lage)
     Music.note = 24+frequenz + dieLage * 12;
 }
 
-Music.initSong = function(songName) {
-    song = JSON.parse( Songs.entchen );    
+Music.initSong = function(json) { //songName) {
+    song = json; //Songs.data[songName]; //JSON.parse( Songs.entchen );    
     Music.notes = song.Notes;
     Music.count = 0;      
     Music.SongEnd = false;
@@ -57,6 +57,7 @@ Music.playNote = function() {
     }
     
     Music.getNote(ton, lage);
+    // TODO: Add second synth for song
     InterCom.audible.startNote(Music.note);
     if(Music.count < Music.notes.length-1) {          
         Music.count++;
@@ -65,7 +66,7 @@ Music.playNote = function() {
         Music.SongEnd = true;
     }                
         
-    
+    return Music.note;
 }
 
 Music.stopNote = function () {    
