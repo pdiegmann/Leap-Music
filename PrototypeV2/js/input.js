@@ -9,7 +9,6 @@ function Input() {
 			if (!InterCom.gamestate.gameActive) return;
 			isPressed = true;
 			Audible.block=true;
-			//startNote(frequency);
 			InterCom.onReceiveInput(y, 0.5);
 		}
 
@@ -36,8 +35,9 @@ function Input() {
 	        var temp = processPositionChange([event.clientX, window.innerHeight-event.clientY, 0], window.innerHeight, window.innerWidth);
 	        if (temp != undefined)
 	        	y = temp;
-	        if (isPressed == true)
+	        if (isPressed == true) {
 	        	InterCom.onReceiveInput(y, 0.5);
+	        }
 	        
 	        counter++;
 	    }

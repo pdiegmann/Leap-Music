@@ -1,5 +1,7 @@
 <html>
 <head>
+	<meta charset="utf-8">
+
 	<link href="css/style.css" rel="stylesheet" />
 
 	<script src="js/jquery.min.js"></script>
@@ -38,7 +40,6 @@
 		// Check for the various File API support.
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 			// Great success! All the File APIs are supported.
-			document.getElementById('songFile').addEventListener('change', handleFileSelect, false);
 			function handleFileSelect(evt) {
 			    var files = evt.target.files; // FileList object
 
@@ -49,7 +50,7 @@
 				    // Closure to capture the file information.
 				    reader.onload = (function(theFile) {
 				    	return function(e) {
-				    		Music.initSong(JSON.parse(e.target.result));
+				    		InterCom.music.initSong(JSON.parse(e.target.result));
 				    		$('#mainView_startScoreGame').show();
 				    	}
 				    })(f);
@@ -58,6 +59,7 @@
       				reader.readAsText(f);
 			    }
 			}
+			document.getElementById('songFile').addEventListener('change', handleFileSelect, false);
 		} else {
 			alert('The File APIs are not fully supported in this browser.');
 			$('#songFile').hide();

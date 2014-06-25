@@ -1,7 +1,9 @@
 function InterCom() {}
 
-InterCom.audible = undefined;
+InterCom.playerTrack = undefined;
+InterCom.backgroundTrack = undefined;
 InterCom.input = undefined;
+InterCom.music = undefined;
 InterCom.visual = undefined;
 InterCom.gamestate = undefined;
 
@@ -16,15 +18,23 @@ InterCom.needsVisualUpdate = false;
 InterCom.audioLoopTime = 100;
 InterCom.visualLoopTime = 200;
 
+InterCom.lastVisualLoopTime = 0;
+
+InterCom.useLoops = false;
+
 InterCom.init = function() {
 	//_.templateSettings.variable = "obj";
-	InterCom.audible = new Audible();
+	InterCom.playerTrack = new Audible();
+	InterCom.backgroundTrack = new Audible();
 	InterCom.input = new Input();
+	InterCom.music = new Music();
 	InterCom.gamestate = new Gamestate();
 	InterCom.visual = new Visual(InterCom.gamestate.getGameView());
 
-	window.setInterval(InterCom.doAudioLoop, InterCom.audioLoopTime);
-	window.setInterval(InterCom.doVisualLoop, InterCom.visualLoopTime);
+	if (InterCom.useLoops) {
+		window.setInterval(InterCom.doAudioLoop, InterCom.audioLoopTime);
+		window.setInterval(InterCom.doVisualLoop, InterCom.visualLoopTime);
+	}
 }
 
 InterCom.activeView = function() {
@@ -33,7 +43,7 @@ InterCom.activeView = function() {
 
 
 InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
-	var frequency = InterCom.audible.normalizedToHertz(y);
+	var frequency = InterCom.playerTrack.normalizedToHertz(y);
 	
 	InterCom.gamestate.palmSphereRadiusNormalized = palmSphereRadiusNormalized;
 	if (InterCom.gamestate.lastPalmSphereRadiusNormalized > 0.25 && palmSphereRadiusNormalized <= 0.25) {
@@ -41,21 +51,20 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 		return;
 	}
 
-	if (Math.abs(InterCom.frequency - frequency) < 0.5)
-		return;
+	//if (Math.abs(InterCom.frequency - frequency) < 0.1 && Math.abs(InterCom.frequency - frequency) > 0.0)
+	//	return;
 
-	var note = InterCom.audible.normalizedToMidi(y);
+	var note = InterCom.playerTrack.normalizedToMidi(y);
 	var targetNoteFrequency = undefined;
 	
 	if (InterCom.gamestate.gameMode == 1) { 
-		targetNoteFrequency = Music.playNote();
+		targetNoteFrequency = InterCom.music.note;
 	}
 	else {
-		targetNoteFrequency = InterCom.audible.midiToHertz(note);
-		console.log(note, targetNoteFrequency);
+		targetNoteFrequency = InterCom.playerTrack.midiToHertz(note);
 	}
 
-	var distantNoteFrequency = InterCom.audible.midiToHertz(InterCom.audible.distantNoteFromNormalized(y)); // Frequency of the more "distant" Note from our frequency-area
+	var distantNoteFrequency = InterCom.playerTrack.midiToHertz(InterCom.playerTrack.distantNoteFromNormalized(y)); // Frequency of the more "distant" Note from our frequency-area
 	var frequencyDifference = Math.abs(targetNoteFrequency - frequency); // Difference from our current Note to our desired target Note
 	var maxFrequencyDifference = (Math.abs(distantNoteFrequency - targetNoteFrequency) / 2);
 	var accurracy = 1 - (Math.min(frequencyDifference, maxFrequencyDifference) / Math.max(frequencyDifference, maxFrequencyDifference));
@@ -67,8 +76,17 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 	InterCom.verticalPosition = y;
 	InterCom.note = note;
 	InterCom.frequency = frequency;
-	InterCom.needsAudioUpdate = true;
+	
 	InterCom.needsVisualUpdate = true;
+
+	if (InterCom.isStroking(palmSphereRadiusNormalized)) {
+		InterCom.needsAudioUpdate = true;
+	}
+
+	if (!InterCom.useLoops) {
+		InterCom.doAudioLoop();
+		InterCom.doVisualLoop();
+	}
 }
 
 InterCom.doAudioLoop = function() {
@@ -78,21 +96,29 @@ InterCom.doAudioLoop = function() {
 	InterCom.needsAudioUpdate = false;
 
 	if (InterCom.gamestate.palmSphereRadiusNormalized <= 0.25) {
-		InterCom.audible.endNote();
+		InterCom.playerTrack.endNote();
 		console.log("ended");
 	}
 	else if (InterCom.gamestate.dynamicNote || (!InterCom.gamestate.dynamicNote && InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized))) {
-		InterCom.audible.endNote();
-		InterCom.audible.startNote(InterCom.note);
+		InterCom.playerTrack.endNote();
+		InterCom.playerTrack.startNote(InterCom.note);
+		if (InterCom.gamestate.gameMode == 1 && false)
+			InterCom.music.playNote(InterCom.backgroundTrack);
 	}
 
-	InterCom.gamestate.updateScore(InterCom.frequency, InterCom.audible.midiToHertz(InterCom.gamestate.getCurrentNote()), InterCom.audible.normalizedToMidi(0), InterCom.audible.normalizedToMidi(1), InterCom.audioLoopTime);
+	InterCom.gamestate.updateScore(InterCom.frequency, InterCom.playerTrack.midiToHertz(InterCom.gamestate.getCurrentNote()), InterCom.playerTrack.normalizedToMidi(0), InterCom.playerTrack.normalizedToMidi(1), InterCom.audioLoopTime);
 
 	InterCom.lastPalmSphereRadiusNormalized = InterCom.palmSphereRadiusNormalized;
 }
 
 InterCom.doVisualLoop = function() {
 	if (!InterCom.needsVisualUpdate)
+		return;
+
+	var end = new Date().getTime();
+	var time = end - InterCom.lastVisualLoopTime;
+
+	if (time < InterCom.visualLoopTime)
 		return;
 
 	InterCom.needsVisualUpdate = false;
@@ -107,6 +133,8 @@ InterCom.doVisualLoop = function() {
 	}
 
 	InterCom.visual.updateVisual(InterCom.verticalPosition, InterCom.accurracy);
+
+	InterCom.lastVisualLoopTime = new Date().getTime();
 }
 
 InterCom.isStroking = function(palmSphereRadiusNormalized) {

@@ -1,4 +1,7 @@
 function Visual(initialView) {
+	this.useWebGL = false;
+	this.gameView = initialView;
+
 	var mesh, renderer, scene, camera, controls, material;
 	var t = 0, ambientFactor, canvas, textureImage;
 	var frequencyColourSpectrum = undefined;
@@ -14,7 +17,9 @@ function Visual(initialView) {
 	accurracyColourSpectrum.setSpectrum('red', 'yellow', 'green');
 	accurracyColourSpectrum.setNumberRange(0, 1);
 
-	_init(initialView);
+	if (this.useWebGL)
+		_init(initialView);
+
 	animate();
 
 	function _init(gameView) {
@@ -60,10 +65,13 @@ function Visual(initialView) {
 	}
 
 	function onWindowResize( event ) {
-		renderer.setSize( window.innerWidth, window.innerHeight );
+		if (this.useWebGL)
+			renderer.setSize( window.innerWidth, window.innerHeight );
 	}
 
 	function animate() {
+		if (!this.useWebGL)
+			return;
 
 		requestAnimationFrame( animate );
 
@@ -106,13 +114,21 @@ function Visual(initialView) {
 		if (accurracyNormalized)
 			accurracyColour = '#' + accurracyColourSpectrum.colourAt(accurracyNormalized);
 
-		// material texture
-		var texture = new THREE.Texture( generateTexture() );
-		texture.needsUpdate = true; // important!
-		material.map = texture;
+		if (this.useWebGL) {
+			// material texture
+			var texture = new THREE.Texture( generateTexture() );
+			texture.needsUpdate = true; // important!
+			material.map = texture;
 
-		renderer.setClearColor( frequencyColour, 1 );
+			renderer.setClearColor( frequencyColour, 1 );
 
-		animate();
+			animate();
+		}
+		else {
+			this.gameView.getDomElement().style.background = "-webkit-linear-gradient(left, " + frequencyColour + " 20%," + accurracyColour + " 40%," + accurracyColour + " 60%," + frequencyColour + " 80%)";
+			this.gameView.getDomElement().style.background = "-o-linear-gradient(left, " + frequencyColour + " 20%," + accurracyColour + " 40%," + accurracyColour + " 60%," + frequencyColour + " 80%)";
+			this.gameView.getDomElement().style.background = "-moz-linear-gradient(left, " + frequencyColour + " 20%," + accurracyColour + " 40%," + accurracyColour + " 60%," + frequencyColour + " 80%)";
+			this.gameView.getDomElement().style.background += "linear-gradient(to right, " + frequencyColour + " 20%," + accurracyColour + " 40%," + accurracyColour + " 60%," + frequencyColour + " 80%)";
+		}
 	}
 }

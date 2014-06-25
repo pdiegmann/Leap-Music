@@ -1,79 +1,78 @@
-function Music() {   }
+function Music() {
 
-Music.note = undefined;
-Music.count = undefined;
-Music.notes = undefined;
-Music.SongEnd = true;
+    this.note = undefined;
+    this.count = undefined;
+    this.notes = undefined;
+    this.SongEnd = true;
 
-//Wandelt einen Ton in eine Frequenz um
-Music.getNote = function (note, lage)
-{
-    frequenz = 0;              
-    dieLage = parseInt(lage);
-      
-    notesIs = ["c", "cis", "d", "dis", "e", "f", "fis", "g", "gis", "a", "ais", "h"];
-    notesBes = ["c", "es", "d", "es", "e", "f", "ges", "g", "as", "a", "b", "h"];
+    //Wandelt einen Ton in eine Frequenz um
+    this.getNote = function (note, lage)
+    {
+        frequenz = 0;              
+        dieLage = parseInt(lage);
+          
+        notesIs = ["c", "cis", "d", "dis", "e", "f", "fis", "g", "gis", "a", "ais", "h"];
+        notesBes = ["c", "es", "d", "es", "e", "f", "ges", "g", "as", "a", "b", "h"];
 
-    i = 0;
-    run = true;
-    while(run || i >= notesIs.length) {
-        if(notesIs[i] == note) {
-            if(dieLage == -2) {
-                frequenz = i-8;    
+        i = 0;
+        run = true;
+        while(run || i >= notesIs.length) {
+            if(notesIs[i] == note) {
+                if(dieLage == -2) {
+                    frequenz = i-8;    
+                }
+                else {
+                    frequenz = i+1;   
+                }
+                run = false;   
+            } else if(notesBes[i] == note) {
+                if(dieLage == -2) {
+                    frequenz = i-8;
+                }
+                else {
+                    frequenz = i+1;
+                }
+                run = false;
             }
-            else {
-                frequenz = i+1;   
-            }
-            run = false;   
-        } else if(notesBes[i] == note) {
-            if(dieLage == -2) {
-                frequenz = i-8;
-            }
-            else {
-                frequenz = i+1;
-            }
-            run = false;
+            i++;
         }
-        i++;
-    }
-    
-    
-    //Music.note = Math.random()*130;
-    Music.note = 24+frequenz + dieLage * 12;
-}
-
-Music.initSong = function(json) { //songName) {
-    song = json; //Songs.data[songName]; //JSON.parse( Songs.entchen );    
-    Music.notes = song.Notes;
-    Music.count = 0;      
-    Music.SongEnd = false;
-    InterCom.init();        	
-}
-
-Music.playNote = function() {
-    if(Music.count < Music.notes.length) {
-        lage = Music.notes[Music.count].Height;
-        ton = Music.notes[Music.count].Note;
-    }
-    
-    Music.getNote(ton, lage);
-    // TODO: Add second synth for song
-    InterCom.audible.startNote(Music.note);
-    if(Music.count < Music.notes.length-1) {          
-        Music.count++;
-    } else {
-        Music.count = 0;    
-        Music.SongEnd = true;
-    }                
         
-    return Music.note;
-}
+        
+        //this.note = Math.random()*130;
+        this.note = 24+frequenz + dieLage * 12;
+    }
 
-Music.stopNote = function () {    
-	InterCom.audible.endNote();
-	if(Music.count >= Music.notes.length) {
-        Music.SongEnd = true;
+    this.initSong = function(json) { //songName) {
+        song = json; //Songs.data[songName]; //JSON.parse( Songs.entchen );    
+        this.notes = song.Notes;
+        this.count = 0;      
+        this.SongEnd = false;   	
+    }
+
+    this.playNote = function(track) {
+        if(this.count < this.notes.length) {
+            lage = this.notes[this.count].Height;
+            ton = this.notes[this.count].Note;
+        }
+        
+        this.getNote(ton, lage);
+        // TODO: Add second synth for song
+        track.startNote(this.note);
+        if(this.count < this.notes.length-1) {          
+            this.count++;
+        } else {
+            this.count = 0;    
+            this.SongEnd = true;
+        }                
+            
+        return this.note;
+    }
+
+    this.stopNote = function (track) {    
+    	track.endNote();
+    	if(this.count >= this.notes.length) {
+            this.SongEnd = true;
+        }
     }
 }
-
 
