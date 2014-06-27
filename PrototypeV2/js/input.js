@@ -1,6 +1,6 @@
 function Input() {
 
-	this.emulateLeapMotion = false;
+	this.emulateLeapMotion = true;
 
 	if (this.emulateLeapMotion == true) {
 		var y = undefined;

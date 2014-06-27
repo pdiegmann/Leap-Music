@@ -4,38 +4,133 @@ body {
 	overflow: hidden;
   font-family: Helvetica, Open Sans, Arial;
 }
-
-#content {
-  position: relative;
-  height: 100%;
-  width: 100%;
+        
+/*
+ * Layout:Screen
+ */
+#screen { 
+    position: absolute; 
+    top: 0px; 
+    left: 0px; 
+    right: 0px; 
+    bottom: 0px; 
+    width:100%; 
+    height:100%;
+    overflow: hidden;
 }
+
+
+/*
+ * Layout:Navigation
+ */
+#navigation {
+    z-index: 1000;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background-color: #222222;
+    text-align: center;
+    color: #12a0d2;
+    font-family: Arial;
+    font-size: 15px;
+    width: 100%;
+    height: 50px;
+    border-bottom: 3px solid #222222;
+}
+
+#navigation p {
+    position: relative;
+    height: 24px;
+    top: 50%;
+    margin-top: -12px;
+    font-size: 25px;
+    color: #a9d013;
+}
+
+
+#navigation a{
+    margin-left: 80px;
+    color: #12a0d2;
+    font-size: 16px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+/*
+ * Layout:Content
+ */  
+#content {
+  position: absolute;
+  top: 50px;
+  left: 0px;
+  width: 80%; 
+  min-width: 200px;
+  height: 100%;
+  color: #222222;
+  font-size: 15px;
+}
+
+
+/*
+ * Layout:Output
+ */
+#output {
+  z-index:900;
+  position:absolute;
+  top: 50px;
+  right:0px;
+  width: 20%;
+  min-width:50px;
+  height:100%;
+  color:#222222;
+  border-right: 10px solid #FFF;
+  background-color:#eeeeee;
+  padding:10px;
+}
+
+/*
+ * Layout:Misc
+ */
+hr {
+    width: 60%;
+    height: 3px;
+    background-color: #222222;
+    margin-left: 0px;
+}
+
+a {
+    color: #a9d013;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:href {
+    text-decoration: underline;
+}
+
+/*
+ * Game:Content
+ */
+
 
 .fullScreenView {
   width: 100%;
   height: 100%;
-  overflow: auto;
-  margin: auto;
-  position: absolute;
-  top: 0; left: 0; bottom: 0; right: 0;
 }
 
 .hidden {
   display:none;
 }
 
-#mainView {
-  padding:25px;
+.notFullScreen {
+    padding: 25px;
 }
 
-#output {
-  position:absolute;
-  top:0;
-  right:0;
-  width:250px;
-  height:250px;
-  z-index:10000;
-  color:white;
-  background-color:black;
-  padding:5px;
+#mainView {
+}
+
+
+#output img {
+    max-width: 100%;
+    height: auto;
 }

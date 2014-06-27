@@ -1,9 +1,15 @@
 <html>
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/favicon.ico">
 
-	<link href="css/style.css" rel="stylesheet" />
-
+    <title>Leap Music</title>   
+    
+<!-- Leap Music -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/jquery-migrate.min.js"></script>
 	<script src="js/three.min.js"></script>
@@ -19,23 +25,42 @@
 	<script src="js/views.js"></script>
 	<script src="js/gamestate.js"></script>
 	<script src="js/music.js"></script>
+
+<!-- Style -->
+    <link href="css/style.css" rel="stylesheet" />
+    
 </head>
 <body>
-	<div id="content">
-		<div id="output">
-			
-		</div>
-		<div id="mainView" class="fullScreenView hidden">
-			<h1><a id="mainView_startFreeGame">Freies Spiel starten...</a></h1>
+
+<div id="screen">
+    <div id="navigation">
+        <p>
+            Leap Music
+            <a id="mainView_showSettings_back">Home</a>
+            <a  id="mainView_showSettings">Einstellungen</a>
+            <a href="team">Team</a>
+        </p>
+    </div>
+
+	<div id="content">		
+		<div id="mainView" class="fullScreenView hidden notFullScreen">
+		
+        <h1>Hello World</h1>
+        Sch&ouml;n, dass du den Weg in die Leap Music Welt gefunden hast.
+        W&auml;hle deinen Spielmodus und schon geht es los!
+			<h2>Freies Spiel</h2>
+			Experimentiere ein wenig mit Leap Music und <b><a id="mainView_startFreeGame">starte ein freies Spiel</a></b>.
 			<hr/>
-			<h1>Song-Datei wählen: <input type="file" id="songFile" name="songFile" /></h1>
-			<h1><a class="hidden" id="mainView_startScoreGame">Spiel starten...</a></h1>
-			<hr />
-			<h1><a id="mainView_showSettings">Einstellungen</a></h1>
+			<h2>Spiele einen Song</h2>
+			Spiele die Noten nach und gewinne tolle Preise!
+			<br>W&auml;hle eine Song-Datei<input type="file" id="songFile" name="songFile" />
+			<p class="hidden" id="mainView_startScoreGame">Und <a >starte das Spiel</a>.</p>
 		</div>
 		<div id="gameView" class="fullScreenView hidden"></div>
 
-		<div id="settingsView" class="fullScreenView hidden">
+		<div id="settingsView" class="fullScreenView hidden notFullScreen">
+		<h1>Einstellungen</h1>
+		Hier kannst du deine Einstellungen vornehmen. 
 			<form method="post" action="">
 				<label for="select_notes">Anzahl der Noten auswählen</label>
 				<select id="select_notes">
@@ -51,11 +76,15 @@
 				<br />
 				<input type="button" id="submit" value="Speichern" />
 			</form>
-			<hr />
-			<h1><a id="mainView_showSettings_back">Zurück</a></h1></div>
-		</div>
-
-
+			<hr /></div>
+	</div>
+	
+	<div id="output">
+        <img src="images/logo.jpg">
+		<h2>Welcome</h2>
+		Hallo NAME SPIELER, sch&ouml;n dich mal wieder zu sehen!
+	</div>
+</div>
 		<script>
 		var output = document.getElementById('output');
 		window.onload = function() {
@@ -90,4 +119,5 @@
 		InterCom.init();
 	};
 	</script>
+
 </body>
