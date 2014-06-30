@@ -96,12 +96,11 @@ InterCom.doAudioLoop = function() {
 
 	if (InterCom.gamestate.palmSphereRadiusNormalized <= 0.25) {
 		InterCom.playerTrack.endNote();
-		console.log("ended");
 	} else if (InterCom.gamestate.dynamicNote || (!InterCom.gamestate.dynamicNote && InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized))) {
-		//InterCom.playerTrack.endNote();
 		InterCom.playerTrack.startNote(InterCom.note);
-		if (InterCom.gamestate.gameMode == 1 && false)
+		if (InterCom.gamestate.gameMode == 1) {
 			InterCom.music.playNote(InterCom.backgroundTrack);
+		}
 	}
 
 	InterCom.gamestate.updateScore(InterCom.frequency, InterCom.playerTrack.midiToHertz(InterCom.gamestate.getCurrentNote()), InterCom.playerTrack.normalizedToMidi(0), InterCom.playerTrack.normalizedToMidi(1), InterCom.audioLoopTime);

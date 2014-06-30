@@ -8,7 +8,7 @@ function Audible() {
 	var phaser = undefined;
 	var synth = undefined;
 	var numNotes = 16; //16;
-	var firstNote = 50; //22;
+	var firstNote = 46; //22;
 	var lastNote = numNotes + firstNote;
 	var midi = new Array(numNotes);
 	var a = 440; // a is 440 hz...
@@ -29,7 +29,7 @@ function Audible() {
 
 	var defaultFrequency = 0; //tone.freq.value; // the default tone's frequency
 	tone=T("sin");
-	synth = T("SynthDef", {poly: 1}).play();
+	/*synth = T("SynthDef", {poly: 1}).play();
 	//env = T("sin", {d:3000, s:0, r:600});
 	master = synth;
 	//mod = T("sin", {freq:2, add:3200, mul:800, kr:1});
@@ -46,7 +46,7 @@ function Audible() {
 		var VCA = EG.append(VCF).bang();
 
 		return VCA;
-	};
+	};*/
 
 	this.startNote = function(noteNumber) {
 		//tone.pause();

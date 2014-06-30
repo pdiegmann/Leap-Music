@@ -5,6 +5,10 @@ body {
   font-family: Helvetica, Open Sans, Arial;
 }
         
+a {
+  cursor: pointer;
+}
+
 /*
  * Layout:Screen
  */
@@ -19,6 +23,14 @@ body {
     overflow: hidden;
 }
 
+#logo {
+  width:290px;
+  height:290px;
+  background-color: white;
+  -webkit-border-radius: 50px;
+  moz-border-radius: 50px;
+  border-radius: 50px;
+}
 
 /*
  * Layout:Navigation

@@ -56,7 +56,6 @@ function Music() {
         }
         
         this.getNote(ton, lage);
-        // TODO: Add second synth for song
         track.startNote(this.note);
         if(this.count < this.notes.length-1) {          
             this.count++;
