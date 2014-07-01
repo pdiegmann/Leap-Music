@@ -20,6 +20,7 @@ InterCom.audioLoopTime = 100;
 InterCom.visualLoopTime = 200;
 
 InterCom.lastVisualLoopTime = 0;
+InterCom.currentNoteNr = 0;
 
 InterCom.useLoops = false;
 
@@ -104,6 +105,9 @@ InterCom.doAudioLoop = function() {
 		if (InterCom.gamestate.gameMode == 1) {
 			InterCom.music.playNote(InterCom.backgroundTrack);
 			InterCom.gamestate.getActiveView().getNotesSlider().goToNextSlide();
+			                                                                
+			InterCom.currentNoteNr++;
+		    document.getElementById("NoteNr"+InterCom.currentNoteNr).style.background = "#12a0d2"; 
 		}
 	}
 
@@ -159,8 +163,7 @@ InterCom.doVisualLoop = function() {
 		currentNoteIndicator.css('margin-top', margin);
 	}
 
-	InterCom.visual.updateVisual(InterCom.verticalPosition, InterCom.accurracy);
-
+	InterCom.visual.updateVisual(InterCom.verticalPosition, InterCom.accurracy);    
 	InterCom.lastVisualLoopTime = new Date().getTime();
 }
 

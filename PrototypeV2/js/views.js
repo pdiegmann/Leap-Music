@@ -10,7 +10,6 @@ function View(id) {
     	$('#' + this.domId).html()
     );*/
 };
-
 // the DOM-Template-Element id in our HTML
 View.prototype.domId = undefined;
 View.prototype.getDomElement = function() {
@@ -74,10 +73,13 @@ function MainView() {
 			else if (position > (Audible.lastNote - Audible.firstNote - 1))
 				position = (Audible.lastNote - Audible.firstNote - 1);
 			var margin = position * 5 + position * 25;
-			var obj = $("<li class='page'><div class='note' style='margin-top:" + margin + "'></div></li>");
+			var obj = $("<li class='page'><div class='note' id='NoteNr"+i+"' style='margin-top:" + margin + "'></div></li>");
 			console.log(position, margin);
 			container.append(obj);
 		}
+        
+        document.getElementById("NoteNr0").style.background = "#12a0d2";
+
 		//container.append("<li class='page'></li>");
 		//container.append("<li class='page'></li>");
 		InterCom.gamestate.getActiveView().getNotesSlider().show();
@@ -87,7 +89,7 @@ function MainView() {
 		//$('#mainView').hide('fast');
 		//$('#settingsView').show('fast');
 		if (InterCom.activeView() != InterCom.gamestate.getSettingsView()) {
-			InterCom.gamestate.pushView(InterCom.gamestate.getSettingsView());
+			InterCom.gamestate.pushView(InterCom.gamestate.getSettingsView()); 			
 		}
 	});
 

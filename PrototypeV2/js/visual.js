@@ -111,8 +111,11 @@ function Visual(initialView) {
 	this.updateVisual = function(frequencyNormalized, accurracyNormalized) {
 		if (frequencyNormalized)
 			frequencyColour = '#' + frequencyColourSpectrum.colourAt(frequencyNormalized);
-		if (accurracyNormalized)
-			accurracyColour = '#' + accurracyColourSpectrum.colourAt(accurracyNormalized);
+		if (accurracyNormalized)  {
+      
+			accurracyColour = '#' + accurracyColourSpectrum.colourAt(accurracyNormalized);         			
+		    document.getElementById("NoteNr"+(InterCom.currentNoteNr-1)).style.background = '#' + accurracyColourSpectrum.colourAt(accurracyNormalized);
+        }
 
 		if (this.useWebGL) {
 			// material texture
