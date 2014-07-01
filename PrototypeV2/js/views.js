@@ -43,6 +43,7 @@ View.prototype.getDomElement = function() {
 function MainView() {
 	document.getElementById("input_firstNote").value = Audible.firstNote;
 	document.getElementById("select_numberNotes").value = Audible.numNotes;
+	document.getElementById("checkbox_emulate").checked = InterCom.input.emulateLeapMotion;
 
 	$('#mainView_startFreeGame').click(function() {
 		$('.menuGameView').show('fast');
@@ -105,6 +106,8 @@ var SettingsView = function SettingsView() {
 		try { Audible.firstNote = parseInt(document.getElementById("input_firstNote").value); }
 		catch (e) { console.log(e); }
 		Audible.lastNote = Audible.numNotes + Audible.firstNote;
+		try { InterCom.input.emulateLeapMotion = document.getElementById("checkbox_emulate").checked; }
+		catch (e) { console.log(e); }
 		InterCom.playerTrack = new Audible();
 		InterCom.brackgroundTrack = new Audible();
 
