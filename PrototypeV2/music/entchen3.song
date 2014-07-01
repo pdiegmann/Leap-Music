@@ -5,137 +5,137 @@
 	"Notes":[
 		{
 			"Note":"c",
-			"Height":2,
+			"Height":3,
 			"Length": 4
 		},
 		{
 			"Note":"d",
-			"Height":2,
+			"Height":3,
 			"Length": 4
 		},
 		{
 			"Note":"e",
-			"Height":2,
+			"Height":3,
 			"Length": 4
 		},
 		{
 			"Note":"f",
-			"Height":2,
+			"Height":3,
 			"Length": 4
 		},
         {
             "Note":"g",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"g",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"a",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"a",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"a",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"a",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"g",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"a",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"a",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"a",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"a",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"g",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"f",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"f",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"f",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"f",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"e",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"e",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"d",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"d",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"d",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"d",
-            "Height":2,
+            "Height":3,
             "Length": 4
         },
         {
             "Note":"c",
-            "Height":2,
+            "Height":3,
             "Length": 4
         }
     ]

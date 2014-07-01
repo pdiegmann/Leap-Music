@@ -63,7 +63,7 @@ function Music() {
         }
         
         this.getNote(ton, lage);
-        track.startNote(this.note);
+        //track.startNote(this.note);
         if(this.count < this.notes.length-1) {          
             this.count++;
         } else {

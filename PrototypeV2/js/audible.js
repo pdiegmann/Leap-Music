@@ -159,6 +159,6 @@ function Audible() {
 	}
 }
 
-Audible.numNotes = 16;
-Audible.firstNote = 46;
+Audible.numNotes = 12;
+Audible.firstNote = 60;
 Audible.lastNote = Audible.numNotes + Audible.firstNote;
