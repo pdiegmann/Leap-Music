@@ -113,8 +113,11 @@ function Visual(initialView) {
 			frequencyColour = '#' + frequencyColourSpectrum.colourAt(frequencyNormalized);
 		if (accurracyNormalized)  {       
 			accurracyColour = '#' + accurracyColourSpectrum.colourAt(accurracyNormalized);         			
-		    if(InterCom.gamestate.gameMode == 1) 
-		      document.getElementById("NoteNr"+(InterCom.currentNoteNr-1)).style.background = '#' + accurracyColourSpectrum.colourAt(accurracyNormalized);
+		    if(InterCom.gamestate.gameMode == 1) {
+		    	var elem = document.getElementById("NoteNr"+(InterCom.currentNoteNr-1));
+		    	if (elem)
+		    		elem.style.background = '#' + accurracyColourSpectrum.colourAt(accurracyNormalized);
+		  	}
         }
          
         
