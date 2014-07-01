@@ -76,6 +76,32 @@ a {
   margin-right: auto;
 }
 
+#currentNoteContainer {
+  position: absolute;
+  top:85px;
+  width: 20%;
+  height: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 40%;
+  margin-right: auto;
+  opacity: 0.8;
+  z-index: 10000;
+}
+
+#currentNote {
+  height: 25px;
+  width: 100px;
+  background-color: black;
+  -webkit-border-radius: 10px;
+  moz-border-radius: 10px;
+  border-radius: 10px;
+  border-color: #000;
+  -moz-box-shadow:     0 0 4px #000;
+   -webkit-box-shadow:  0 0 4px #000;
+   box-shadow:          0 0 4px #000;
+}
+
 #logo {
   width:290px;
   height:290px;

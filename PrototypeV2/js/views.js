@@ -78,8 +78,8 @@ function MainView() {
 			console.log(position, margin);
 			container.append(obj);
 		}
-		container.append("<li class='page'></li>");
-		container.append("<li class='page'></li>");
+		//container.append("<li class='page'></li>");
+		//container.append("<li class='page'></li>");
 		InterCom.gamestate.getActiveView().getNotesSlider().show();
 		document.getElementById('songfileform').reset();
 	});

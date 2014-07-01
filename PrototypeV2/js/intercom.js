@@ -140,6 +140,25 @@ InterCom.doVisualLoop = function() {
 	if (score && InterCom.gamestate.currentScore)
 		score.text(Math.round(InterCom.gamestate.currentScore).format(0, 3, '.', ','));
 
+	var note_current = $('#note_current span');
+	if (note_current && InterCom.note)
+		note_current.text(Math.round(InterCom.note));
+
+	var note_target = $('#note_target span');
+	if (note_target && InterCom.targetNote)
+		note_target.text(Math.round(InterCom.targetNote));
+
+	var currentNoteIndicator = $('#currentNote');
+	if (currentNoteIndicator) {
+		var position = Audible.lastNote - InterCom.note;
+		if (position < 0)
+			position = 0;
+		else if (position > (Audible.lastNote - Audible.firstNote - 1))
+			position = (Audible.lastNote - Audible.firstNote - 1);
+		var margin = position * 5 + position * 25;
+		currentNoteIndicator.css('margin-top', margin);
+	}
+
 	InterCom.visual.updateVisual(InterCom.verticalPosition, InterCom.accurracy);
 
 	InterCom.lastVisualLoopTime = new Date().getTime();
