@@ -12,6 +12,7 @@ InterCom.frequency = undefined;
 InterCom.accurracy = undefined;
 InterCom.targetNoteFrequency = undefined;
 InterCom.note = undefined;
+InterCom.targetNote = undefined;
 InterCom.needsAudioUpdate = false;
 InterCom.needsVisualUpdate = false;
 
@@ -56,14 +57,15 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 
 	var note = InterCom.playerTrack.normalizedToMidi(y);
 	var targetNoteFrequency = undefined;
+	var distantNoteFrequency = undefined;
 
 	if (InterCom.gamestate.gameMode == 1) {
-		targetNoteFrequency = InterCom.music.note;
+		targetNoteFrequency = InterCom.playerTrack.midiToHertz(InterCom.music.note);
+		distantNoteFrequency = InterCom.playerTrack.midiToHertz(Math.max(Math.abs(InterCom.playerTrack.lastNote - InterCom.music.note), Math.abs(InterCom.music.note - InterCom.playerTrack.firstNote)));
 	} else {
 		targetNoteFrequency = InterCom.playerTrack.midiToHertz(note);
+		distantNoteFrequency = InterCom.playerTrack.midiToHertz(InterCom.playerTrack.distantNoteFromNormalized(y)); // Frequency of the more "distant" Note from our frequency-area
 	}
-
-	var distantNoteFrequency = InterCom.playerTrack.midiToHertz(InterCom.playerTrack.distantNoteFromNormalized(y)); // Frequency of the more "distant" Note from our frequency-area
 	var frequencyDifference = Math.abs(targetNoteFrequency - frequency); // Difference from our current Note to our desired target Note
 	var maxFrequencyDifference = (Math.abs(distantNoteFrequency - targetNoteFrequency) / 2);
 	var accurracy = 1 - (Math.min(frequencyDifference, maxFrequencyDifference) / Math.max(frequencyDifference, maxFrequencyDifference));
@@ -71,6 +73,7 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 		accurracy = 1;
 
 	InterCom.targetNoteFrequency = targetNoteFrequency;
+	InterCom.targetNote = InterCom.playerTrack.hertzToMidi(targetNoteFrequency);
 	InterCom.accurracy = accurracy;
 	InterCom.verticalPosition = y;
 	InterCom.note = note;
@@ -104,8 +107,9 @@ InterCom.doAudioLoop = function() {
 		}
 	}
 
-	//InterCom.gamestate.updateScore(InterCom.frequency, InterCom.playerTrack.midiToHertz(InterCom.gamestate.getCurrentNote()), InterCom.playerTrack.normalizedToMidi(0), InterCom.playerTrack.normalizedToMidi(1), InterCom.audioLoopTime);
-	InterCom.gamestate.updateScore(InterCom.frequency, InterCom.playerTrack.midiToHertz(InterCom.targetNoteFrequency), InterCom.playerTrack.normalizedToHertz(0), InterCom.playerTrack.normalizedToHertz(1), InterCom.audioLoopTime);
+	if (InterCom.gamestate.gameMode == 1) {
+		InterCom.gamestate.updateScore(InterCom.frequency, InterCom.targetNoteFrequency, InterCom.playerTrack.normalizedToHertz(0), InterCom.playerTrack.normalizedToHertz(1), InterCom.audioLoopTime);
+	}
 
 	InterCom.lastPalmSphereRadiusNormalized = InterCom.palmSphereRadiusNormalized;
 }
@@ -123,9 +127,10 @@ InterCom.doVisualLoop = function() {
 	InterCom.needsVisualUpdate = false;
 
 	if (output != undefined) {
-		output.innerHTML = "target: " + InterCom.targetNoteFrequency + "<br/>";
-		output.innerHTML += "accurracy: " + InterCom.accurracy + "<br/>";
+		output.innerHTML = "target freq: " + InterCom.targetNoteFrequency + "<br/>";
 		output.innerHTML += "frequency: " + InterCom.frequency + "<br/>";
+		output.innerHTML += "accurracy: " + InterCom.accurracy + "<br/>";
+		output.innerHTML += "target note: " + InterCom.targetNote + "<br/>";
 		output.innerHTML += "note: " + InterCom.note + "<br/>";
 		output.innerHTML += "psrn: " + InterCom.gamestate.palmSphereRadiusNormalized + "<br/>";
 		output.innerHTML += "score: " + InterCom.gamestate.currentScore + "<br/>";

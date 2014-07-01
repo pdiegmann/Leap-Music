@@ -122,8 +122,11 @@
 				    // Closure to capture the file information.
 				    reader.onload = (function(theFile) {
 				    	return function(e) {
-				    		InterCom.music.initSong(JSON.parse(e.target.result));
-				    		$('#mainView_startScoreGame').show();
+				    		try {
+				    			InterCom.music.initSong(JSON.parse(e.target.result));
+				    			$('#mainView_startScoreGame').show();
+				    		}
+				    		catch (e) { console.log(e); alert('Ups! Da ist etwas schief gelaufen!'); }
 				    	}
 				    })(f);
 

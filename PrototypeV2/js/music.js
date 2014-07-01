@@ -54,6 +54,9 @@ function Music() {
     }
 
     this.playNote = function(track) {
+        if (this.SongEnd == true)
+            return;
+
         if(this.count < this.notes.length) {
             lage = this.notes[this.count].Height;
             ton = this.notes[this.count].Note;
