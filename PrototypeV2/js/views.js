@@ -60,8 +60,10 @@ function MainView() {
 		$('.menuMainView').hide('fast');
 		InterCom.gamestate.gameMode = 1;
 		InterCom.gamestate.currentScore = 0;
-		InterCom.gamestate.pushView(InterCom.gamestate.getGameView());
+		var gameView = InterCom.gamestate.getGameView();
+		InterCom.gamestate.pushView(gameView);
 		InterCom.gamestate.gameActive = true;
+
 		var container = $('#notes .bxslider');
 		container.empty();
 		container.append("<li class='page'></li>");
@@ -79,6 +81,10 @@ function MainView() {
 			var obj = $("<li class='page'><div class='note' id='NoteNr"+i+"' style='margin-top:" + margin + "'></div></li>");
 			container.append(obj);
 		}
+        
+		container.append("<li class='page'></li>");
+		container.append("<li class='page'></li>");
+        gameView.getNotesSlider().reloadSlider();
         
         document.getElementById("NoteNr0").style.background = "#12a0d2";
 
@@ -153,9 +159,8 @@ var GameView = function GameView() {
 GameView.prototype = View.prototype;
 GameView.prototype.constructor = GameView;
 GameView.prototype.notesSlider = undefined;
-GameView.prototype.getNotesSlider = function() { 
-	if (this.notesSlider == undefined) {
-		this.notesSlider = $('#notes .bxslider').bxSlider({
+GameView.prototype.buildNotesSlider = function() { 
+	return this.notesSlider = $('#notes .bxslider').bxSlider({
 		  infiniteLoop: false,
 		  hideControlOnEnd: true,
 		  speed: 100,
@@ -163,6 +168,10 @@ GameView.prototype.getNotesSlider = function() {
 		  pager: false,
 		  controls: false
 		});
+};
+GameView.prototype.getNotesSlider = function() { 
+	if (this.notesSlider == undefined) {
+		this.notesSlider = this.buildNotesSlider();
 	}
 	return this.notesSlider; 
 };

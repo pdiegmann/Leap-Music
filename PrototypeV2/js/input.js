@@ -9,7 +9,6 @@ function Input(emulate) {
 			var y = undefined;
 			var isPressed = false;
 			function handleMouseClick(event) {
-				console.log(InterCom.emulateLeapMotion);
 				if (!InterCom.emulateLeapMotion) return;
 				if (!InterCom.gamestate.gameActive) return;
 				isPressed = true;
