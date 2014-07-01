@@ -49,6 +49,7 @@ function MainView() {
 		$('.menuGameView').show('fast');
 		$('.menuMainView').hide('fast');
 		InterCom.gamestate.gameMode = 0;
+		InterCom.gamestate.currentScore = 0;
 		InterCom.gamestate.pushView(InterCom.gamestate.getGameView());
 		InterCom.gamestate.gameActive = true;
 		InterCom.gamestate.getActiveView().getNotesSlider().hide();
@@ -58,6 +59,7 @@ function MainView() {
 		$('.menuGameView').show('fast');
 		$('.menuMainView').hide('fast');
 		InterCom.gamestate.gameMode = 1;
+		InterCom.gamestate.currentScore = 0;
 		InterCom.gamestate.pushView(InterCom.gamestate.getGameView());
 		InterCom.gamestate.gameActive = true;
 		var container = $('#notes .bxslider');
