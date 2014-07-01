@@ -80,13 +80,12 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 	InterCom.accurracy = accurracy;
 	InterCom.verticalPosition = y;
 	InterCom.note = note;
-	InterCom.frequency = frequency;
 
 	InterCom.needsVisualUpdate = true;
-
-	if (InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized)) {
+	if ((InterCom.gamestate.dynamicNote && InterCom.frequency != frequency) || InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized)) {
 		InterCom.needsAudioUpdate = true;
 	}
+	InterCom.frequency = frequency;
 
 	if (!InterCom.useLoops) {
 		InterCom.doAudioLoop();
