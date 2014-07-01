@@ -20,8 +20,11 @@ View.prototype.getDomElement = function() {
 //View.prototype.template = undefined;
 
 // pop's a view from the stack and animates it's slide out
-View.prototype.pop = function() {
-	this.getDomElement().hide('fast');
+View.prototype.pop = function(viewBelow) {
+	$('#' + this.domId).hide('fast');
+	if (viewBelow) {
+		$('#' + viewBelow.domId).show('fast');
+	}
 };
 
 // pushes a view onto our current view and animates it
@@ -46,7 +49,7 @@ function MainView() {
 		$('.menuGameView').show('fast');
 		$('.menuMainView').hide('fast');
 		InterCom.gamestate.gameMode = 0;
-		InterCom.activeView().pushOnTop(InterCom.gamestate.getGameView());
+		InterCom.gamestate.pushView(InterCom.gamestate.getGameView());
 		InterCom.gamestate.gameActive = true;
 		InterCom.gamestate.getActiveView().getNotesSlider().hide();
 	});
@@ -55,7 +58,7 @@ function MainView() {
 		$('.menuGameView').show('fast');
 		$('.menuMainView').hide('fast');
 		InterCom.gamestate.gameMode = 1;
-		InterCom.activeView().pushOnTop(InterCom.gamestate.getGameView());
+		InterCom.gamestate.pushView(InterCom.gamestate.getGameView());
 		InterCom.gamestate.gameActive = true;
 		var container = $('#notes .bxslider');
 		container.empty();
@@ -81,20 +84,35 @@ function MainView() {
 		document.getElementById('songfileform').reset();
 	});
 	$('#mainView_showSettings').click(function() {
-		$('#mainView').hide('fast');
-		$('#settingsView').show('fast');
-	});
-	$('#mainView_showSettings_back').click(function() {
-		$('#mainView').show('fast');
-		$('#settingsView').hide('fast');
-	});
-	$('#settings_save').click(function() {
-		alert(document.getElementById("select_numberNotes").value);
-		alert(document.getElementById("input_firstNote").value);
+		//$('#mainView').hide('fast');
+		//$('#settingsView').show('fast');
+		if (InterCom.activeView() != InterCom.gamestate.getSettingsView()) {
+			InterCom.gamestate.pushView(InterCom.gamestate.getSettingsView());
+		}
 	});
 
 	return new View("mainView");
 }
+
+var SettingsView = function SettingsView() {
+	View.apply(this, arguments);
+	this.domId = "settingsView";
+	$('#settings_save').click(function(e) {
+		e.preventDefault();
+		console.log(document.getElementById("select_numberNotes").value);
+		console.log(document.getElementById("input_firstNote").value);
+		console.log("a");
+		InterCom.gamestate.popActiveView();
+		console.log("c");
+		return false;
+	});
+	$('#mainView_showSettings_back').click(function() {
+		InterCom.gamestate.popActiveView();
+	});
+	return this;
+}
+SettingsView.prototype = View.prototype;
+SettingsView.prototype.constructor = SettingsView;
 
 var GameView = function GameView() {
 	View.apply(this, arguments);
@@ -102,7 +120,7 @@ var GameView = function GameView() {
 	$('#gameView_back').click(function() {
 		InterCom.gamestate.gameMode = -1;
 		InterCom.gamestate.gameActive = false;
-		Audible.pause();
+		InterCom.playerTrack.pause();
 		InterCom.backgroundTrack.pause();
 		InterCom.gamestate.popActiveView();
 		$('#mainView').show('fast');

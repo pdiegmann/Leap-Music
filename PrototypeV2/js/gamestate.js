@@ -7,8 +7,7 @@ function Gamestate() {
 	this.gameMode = -1; // -1 no game mode specified, 0 free game, 1 score game
 
 	this.getCurrentNote = function() {
-		// TODO get current note from song at current time
-		return undefined;
+		return InterCom.music.note;
 	}
 
 	this.getActiveView = function() {
@@ -16,7 +15,7 @@ function Gamestate() {
 			return undefined;
 		if (this.viewStack.length <= 0)
 			return undefined;
-		return this.viewStack[this.viewStack.length - 1];
+		return this.viewStack.last();
 	}
 
 	this.popActiveView = function() {
@@ -24,8 +23,11 @@ function Gamestate() {
 			return;
 		if (this.viewStack.length <= 1)
 			return;
-		this.activeView.pop();
-		this.viewStack.pop;
+		var view = this.viewStack.last();
+		if (view) {
+			this.viewStack.pop();
+			view.pop(this.viewStack.last());
+		}
 	};
 
 	this.gameActive = false;
@@ -34,6 +36,10 @@ function Gamestate() {
 	var gameView = new GameView();
 	this.getGameView = function() {
 		return gameView;
+	}
+	var settingsView = new SettingsView();
+	this.getSettingsView = function() {
+		return settingsView;
 	}
 
 	this.calculateScore = function(currentFreq, targetFreq, minFreq, maxFreq, elapsedTime){
@@ -62,11 +68,12 @@ function Gamestate() {
 		var activeView = this.getActiveView();
 		
 		//viewContainer.appendChild(view.getDomElement());
-		$('#' + view.domId).removeClass('hidden');
-
 		if (activeView)
 			activeView.pushOnTop(view);
+		else
+			$('#' + view.domId).show('fast');
 		this.viewStack.push(view);
+		console.log(this.viewStack);
 	};
 
 	this.pushView(new MainView());

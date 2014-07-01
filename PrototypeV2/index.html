@@ -97,7 +97,7 @@
 					<option value="50">50</option>
 				</select>-->
 				<br />
-				<input type="button" id="settings_save" value="Speichern" />
+				<input type="submit" id="settings_save" value="Speichern" />
 			</form>
 			<hr />
 		</div>
@@ -112,6 +112,11 @@
 		<script>
 		var output = document.getElementById('output');
 		window.onload = function() {
+			if (!Array.prototype.last){
+			    Array.prototype.last = function(){
+			        return this[this.length - 1];
+			    };
+			};
 		// Check for the various File API support.
 		if (window.File && window.FileReader && window.FileList && window.Blob) {
 			// Great success! All the File APIs are supported.
