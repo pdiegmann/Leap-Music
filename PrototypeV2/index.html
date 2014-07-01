@@ -51,6 +51,36 @@
         <h1>Hallo Musik-Freund!</h1>
         Sch&ouml;n, dass du den Weg in die Leap Music Welt gefunden hast.
         W&auml;hle deinen Spielmodus und schon geht es los!
+        		<table>
+            <tr>
+                <td>
+                   <a id="mainView_startFreeGame"> <div class="gameButton freeGame"><div class="buttonText">Spielen</div></div></a>
+                </td>
+                <td>
+                   <h2>Freies Spiel</h2>
+		          	Experimentiere ein wenig mit Leap Music und <b>starte ein freies Spiel</b>.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="mainView_chooseSong" class="gameButton songGame"><div class="buttonText">W&auml;hle ein Lied!</div></div>
+                    
+                    <!-- Wird angezeigt, wenn Song gewaehlt wurde -->
+                    <a id="mainView_startScoreGame" class="hidden">
+                    <div id="songGame" class="gameButton songGame"><div class="buttonText">Lied spielen!</div></div>
+                    </a>
+                </td>
+                <td>
+              <h2>Spiele einen Song</h2>
+			Spiele die Noten nach und gewinne tolle Preise!
+			<br>W&auml;hle eine Song-Datei<form id="songfileform"><input type="file" id="songFile" name="songFile" /></form>
+			<p class="hidden" id="mainView_startScoreGame">Und <a >starte das Spiel</a>.</p>
+
+                </td>
+            </tr>
+        </table>
+
+        
 			<h2>Freies Spiel</h2>
 			Experimentiere ein wenig mit Leap Music und <b><a id="mainView_startFreeGame">starte ein freies Spiel</a></b>.
 			<hr/>
@@ -112,6 +142,7 @@
 		<script>
 		var output = undefined; //document.getElementById('output');
 		window.onload = function() {
+		  
 			if (!Array.prototype.last){
 			    Array.prototype.last = function(){
 			        return this[this.length - 1];
@@ -129,10 +160,12 @@
 
 				    // Closure to capture the file information.
 				    reader.onload = (function(theFile) {
+				    
 				    	return function(e) {
 				    		try {
 				    			InterCom.music.initSong(JSON.parse(e.target.result));
 				    			$('#mainView_startScoreGame').show();
+				    			$('#mainView_chooseSong').hide();  
 				    		}
 				    		catch (e) { console.log(e); alert('Ups! Da ist etwas schief gelaufen!'); }
 				    	}
@@ -146,6 +179,7 @@
 		} else {
 			alert('The File APIs are not fully supported in this browser.');
 			$('#songFile').hide();
+            $('#mainView_chooseSong').show();
 		}
 		InterCom.init();
 	};

@@ -127,6 +127,7 @@ var GameView = function GameView() {
 		$('#gameView').hide('fast');
 		$('.menuMainView').show('fast');
 		$('.menuGameView').hide('fast');
+		$('#mainView_chooseSong').show('fast');
 	});
 	if (InterCom.gamestate != undefined && InterCom.gamestate.gameMode == 1) {
 		this.getNotesSlider().show();

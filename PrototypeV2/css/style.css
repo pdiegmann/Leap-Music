@@ -85,6 +85,31 @@ a {
   border-radius: 50px;
 }
 
+.gameButton {         
+  width:200px;
+  height:200px;
+  color: #fff;
+  font-family: Arial;
+  font-size: 30px;
+  text-align: center;
+  text-transform: uppercase;
+  -webkit-border-radius: 50px;
+  moz-border-radius: 50px;
+  border-radius: 50px;    
+}
+
+.buttonText{
+    position:relative;
+    top:50%;   
+}
+
+.freeGame{ 
+    background-color: #12a0d2;        
+}                       
+.songGame{
+    background-color: #a9d013;
+}
+
 /*
  * Layout:Navigation
  */
