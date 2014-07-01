@@ -50,7 +50,6 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 	InterCom.gamestate.palmSphereRadiusNormalized = palmSphereRadiusNormalized;
 	
 	if (InterCom.gamestate.lastPalmSphereRadiusNormalized > 0.25 && palmSphereRadiusNormalized <= 0.25) {
-		console.log("a", InterCom.gamestate.palmSphereRadiusNormalized);
 		InterCom.needsAudioUpdate = true;
 		InterCom.doAudioLoop();
 		return;
@@ -88,7 +87,6 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 	if (InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized)) {
 		InterCom.needsAudioUpdate = true;
 	}
-	console.log("b", InterCom.gamestate.palmSphereRadiusNormalized);
 
 	if (!InterCom.useLoops) {
 		InterCom.doAudioLoop();
@@ -101,7 +99,6 @@ InterCom.doAudioLoop = function() {
 		return;
 
 	InterCom.needsAudioUpdate = false;
-	console.log("c", InterCom.gamestate.palmSphereRadiusNormalized);
 	if (InterCom.gamestate.palmSphereRadiusNormalized <= 0.25) {
 		InterCom.playerTrack.endNote();
 	} else if (InterCom.gamestate.dynamicNote || (!InterCom.gamestate.dynamicNote && InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized))) {
