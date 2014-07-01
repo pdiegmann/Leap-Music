@@ -6,7 +6,7 @@ function Music() {
     this.SongEnd = true;
 
     //Wandelt einen Ton in eine Frequenz um
-    this.getNote = function (note, lage)
+    this.getNote = function (note, lage, set)
     {
         frequenz = 0;              
         dieLage = parseInt(lage);
@@ -37,9 +37,13 @@ function Music() {
             i++;
         }
         
-        
-        //this.note = Math.random()*130;
-        this.note = 24+frequenz + dieLage * 12;
+        if (set == false) {
+            return 24+frequenz + dieLage * 12;
+        }
+        else {
+            //this.note = Math.random()*130;
+            this.note = 24+frequenz + dieLage * 12;
+        }
     }
 
     this.initSong = function(json) { //songName) {

@@ -23,6 +23,59 @@ a {
     overflow: hidden;
 }
 
+.page {
+  width: 175px !important;
+  height: 150px;
+  padding:20px;
+}
+
+.note {
+  height: 25px;
+  width: 100%;
+  background-color: white;
+  -webkit-border-radius: 10px;
+  moz-border-radius: 10px;
+  border-radius: 10px;
+  border-color: #000;
+  -moz-box-shadow:     0 0 4px #000;
+   -webkit-box-shadow:  0 0 4px #000;
+   box-shadow:          0 0 4px #000;
+}
+
+.note.high {
+  margin-top: 0px;
+}
+.note.med {
+  margin-top: 30px; /* padding + height = vert-pos * 5 + vert-pos * 25 */
+}
+.note.low {
+  margin-top: 60px;
+}
+
+.bx-wrapper {
+  position: absolute;
+  top:50px;
+  height: 600px !important;
+  background: transparent !important;
+}
+.bx-viewport {
+  height: 600px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+#notes {
+  position: relative;
+  left:5px;
+  width: 750px;
+  height: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 #logo {
   width:290px;
   height:290px;

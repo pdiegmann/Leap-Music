@@ -8,8 +8,8 @@ function Audible() {
 	var phaser = undefined;
 	var synth = undefined;
 	var numNotes = 16; //16;
-	var firstNote = 46; //22;
-	var lastNote = numNotes + firstNote;
+	this.firstNote = 46; //22;
+	this.lastNote = numNotes + this.firstNote;
 	var midi = new Array(numNotes);
 	var a = 440; // a is 440 hz...
 
@@ -18,9 +18,9 @@ function Audible() {
 	Audible.maxVolume = 12;
 	Audible.paddingPercentage = 0.15; // padding which surrounds the 'sensitive area'
 
-	for (var x = firstNote; x < lastNote; ++x)
+	for (var x = this.firstNote; x < this.lastNote; ++x)
 	{
-		midi[x - firstNote] = (a / 32) * Math.pow(2, ((x - 9) / 12));
+		midi[x - this.firstNote] = (a / 32) * Math.pow(2, ((x - 9) / 12));
 	}
 	/*for (var x = 0; x < 126; ++x)
 	{
@@ -93,39 +93,39 @@ function Audible() {
 	this.midiToHertz = function(midiNote) {
 		midiNote = Math.round(midiNote);
 		//console.log("note: " + midiNote);
-		if (midiNote <= firstNote)
+		if (midiNote <= this.firstNote)
 			return midi[0];
-		if (midiNote >= firstNote + numNotes - 1)
+		if (midiNote >= this.firstNote + numNotes - 1)
 			return midi[numNotes - 1];
-		return midi[midiNote - firstNote]
+		return midi[midiNote - this.firstNote]
 	}
 
 	this.hertzToMidi = function(hertz) {
 		var a = 440; // a is 440 hz...
 		var midiNote = (a / 32) * Math.pow(2, ((hertz - 9) / 12));
-		if (midiNote <= firstNote)
-			return firstNote;
-		if (midiNote >= firstNote + numNotes - 1)
+		if (midiNote <= this.firstNote)
+			return this.firstNote;
+		if (midiNote >= this.firstNote + numNotes - 1)
 			return numNotes - 1;
 		return midiNote;
 	}
 
 	this.normalizedToMidi = function(normalized) {
 		/*if (normalized <= 0)
-			return Math.round(firstNote, 0);
+			return Math.round(this.firstNote, 0);
 		if (normalized >= 1)
-			return Math.round(firstNote + (numNotes - 1), 0);
+			return Math.round(this.firstNote + (numNotes - 1), 0);
 		
 		return Math.round(normalized * Math.round((numNotes - 1), 0), 0); //Math.round(midi[Math.round(normalized * (numNotes - 1), 0)]);
 		*/
 		if (normalized <= 0)
-			return Math.round(firstNote, 0);
+			return Math.round(this.firstNote, 0);
 		if (normalized >= 1)
-			return Math.round(firstNote + (numNotes - 1), 0);
+			return Math.round(this.firstNote + (numNotes - 1), 0);
 
-		var current = normalized * (numNotes - 1) + firstNote;
-		var ceil = Math.ceil(normalized * (numNotes - 1) + firstNote, 0)
-		var floor = Math.floor(normalized * (numNotes - 1) + firstNote, 0)
+		var current = normalized * (numNotes - 1) + this.firstNote;
+		var ceil = Math.ceil(normalized * (numNotes - 1) + this.firstNote, 0)
+		var floor = Math.floor(normalized * (numNotes - 1) + this.firstNote, 0)
 		
 		if (Math.abs(ceil - current) > Math.abs(floor - current)) {
 			return floor;
@@ -137,13 +137,13 @@ function Audible() {
 
 	this.distantNoteFromNormalized = function(normalized) {
 		if (normalized <= 0)
-			return Math.round(firstNote, 0);
+			return Math.round(this.firstNote, 0);
 		if (normalized >= 1)
-			return Math.round(firstNote + (numNotes - 1), 0);
+			return Math.round(this.firstNote + (numNotes - 1), 0);
 
-		var current = normalized * (numNotes - 1) + firstNote;
-		var ceil = Math.ceil(normalized * (numNotes - 1) + firstNote, 0);
-		var floor = Math.floor(normalized * (numNotes - 1) + firstNote, 0);
+		var current = normalized * (numNotes - 1) + this.firstNote;
+		var ceil = Math.ceil(normalized * (numNotes - 1) + this.firstNote, 0);
+		var floor = Math.floor(normalized * (numNotes - 1) + this.firstNote, 0);
 		
 		if (Math.abs(ceil - current) > Math.abs(floor - current)) {
 			return ceil;

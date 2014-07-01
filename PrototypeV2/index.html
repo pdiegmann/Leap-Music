@@ -16,6 +16,8 @@
 	<script src="js/leap.min.js"></script>
 	<script src="js/timbre.min.js"></script>
 	<script src="js/rainbowvis.js"></script>
+	<script src="js/jquery.bxslider.min.js"></script>
+
 	<!--<script src="js/underscore.js"></script>-->
 
 	<script src="js/visual.js"></script>
@@ -28,7 +30,7 @@
 
 <!-- Style -->
     <link href="css/style.css" rel="stylesheet" />
-    
+    <link href="css/jquery.bxslider.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -55,12 +57,29 @@
 			Spiele die Noten nach und gewinne tolle Preise!
 			<br>W&auml;hle eine Song-Datei<input type="file" id="songFile" name="songFile" />
 			<p class="hidden" id="mainView_startScoreGame">Und <a >starte das Spiel</a>.</p>
+
 		</div>
-		<div id="gameView" class="fullScreenView hidden"></div>
+		<div id="gameView" class="fullScreenView hidden">
+			<div id="notes" class="">
+				<ul class="bxslider">
+					<!--
+					<li class="page"></li>
+					<li class="page"><div class="note high"></div></li>
+					<li class="page"><div class="note med"></div></li>
+					<li class="page"><div class="note low"></div></li>
+					<li class="page"><div class="note med"></div></li>
+					<li class="page"><div class="note low"></div></li>
+					<li class="page"><div class="note low"></div></li>
+					<li class="page"><div class="note high"></div></li>
+					<li class="page"></li>
+					-->
+				</ul>
+			</div>
+		</div>
 
 		<div id="settingsView" class="fullScreenView hidden notFullScreen">
-		<h1>Einstellungen</h1>
-		Hier kannst du deine Einstellungen vornehmen. 
+			<h1>Einstellungen</h1>
+			Hier kannst du deine Einstellungen vornehmen. 
 			<form method="post" action="">
 				<label for="select_notes">Anzahl der Noten auswählen</label>
 				<select id="select_notes">
@@ -76,7 +95,8 @@
 				<br />
 				<input type="button" id="submit" value="Speichern" />
 			</form>
-			<hr /></div>
+			<hr />
+		</div>
 	</div>
 	
 	<div id="output">

@@ -100,6 +100,7 @@ InterCom.doAudioLoop = function() {
 		InterCom.playerTrack.startNote(InterCom.note);
 		if (InterCom.gamestate.gameMode == 1) {
 			InterCom.music.playNote(InterCom.backgroundTrack);
+			InterCom.gamestate.getActiveView().getNotesSlider().goToNextSlide();
 		}
 	}
 

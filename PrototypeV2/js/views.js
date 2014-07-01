@@ -44,12 +44,33 @@ function MainView() {
 		InterCom.gamestate.gameMode = 0;
 		InterCom.activeView().pushOnTop(InterCom.gamestate.getGameView());
 		InterCom.gamestate.gameActive = true;
+		InterCom.gamestate.getActiveView().getNotesSlider().hide();
 	});
 	$('#mainView_startScoreGame').click(function() {
 		$('#mainView_startScoreGame').hide();
 		InterCom.gamestate.gameMode = 1;
 		InterCom.activeView().pushOnTop(InterCom.gamestate.getGameView());
 		InterCom.gamestate.gameActive = true;
+		var container = $('#notes .bxslider');
+		container.empty();
+		container.append("<li class='page'></li>");
+		var notes = InterCom.music.notes;
+		for (var i = 0; i < notes.length; i++) {
+			var lage = notes[i].Height;
+            var ton = notes[i].Note;
+            var position = InterCom.playerTrack.lastNote - InterCom.music.getNote(ton, lage, false);
+			if (position < 0)
+				position = 0;
+			else if (position > (InterCom.playerTrack.lastNote - InterCom.playerTrack.firstNote - 1))
+				position = (InterCom.playerTrack.lastNote - InterCom.playerTrack.firstNote - 1);
+			var margin = position * 5 + position * 25;
+			var obj = $("<li class='page'><div class='note' style='margin-top:" + margin + "'></div></li>");
+			console.log(position, margin);
+			container.append(obj);
+		}
+		container.append("<li class='page'></li>");
+		InterCom.gamestate.getActiveView().getNotesSlider().show();
+
 	});
 	$('#mainView_showSettings').click(function() {
 		$('#mainView').hide();
@@ -64,12 +85,30 @@ function MainView() {
 		alert(document.getElementById("select_firstNote").value);
 	});
 
-	
-
-
 	return new View("mainView");
 }
 
-function GameView() {
-	return new View("gameView");
+var GameView = function GameView() {
+	View.apply(this, arguments);
+	this.domId = "gameView";
+	if (InterCom.gamestate != undefined && InterCom.gamestate.gameMode == 1) {
+		this.getNotesSlider().show();
+	}
+	return this;
 }
+GameView.prototype = View.prototype;
+GameView.prototype.constructor = GameView;
+GameView.prototype.notesSlider = undefined;
+GameView.prototype.getNotesSlider = function() { 
+	if (this.notesSlider == undefined) {
+		this.notesSlider = $('#notes .bxslider').bxSlider({
+		  infiniteLoop: false,
+		  hideControlOnEnd: true,
+		  speed: 100,
+		  slideMargin: 50,
+		  pager: false,
+		  controls: false
+		});
+	}
+	return this.notesSlider; 
+};
