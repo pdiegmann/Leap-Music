@@ -61,7 +61,7 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 
 	if (InterCom.gamestate.gameMode == 1) {
 		targetNoteFrequency = InterCom.playerTrack.midiToHertz(InterCom.music.note);
-		distantNoteFrequency = InterCom.playerTrack.midiToHertz(Math.max(Math.abs(InterCom.playerTrack.lastNote - InterCom.music.note), Math.abs(InterCom.music.note - InterCom.playerTrack.firstNote)));
+		distantNoteFrequency = InterCom.playerTrack.midiToHertz(Math.max(Math.abs(Audible.lastNote - InterCom.music.note), Math.abs(InterCom.music.note - Audible.firstNote)));
 	} else {
 		targetNoteFrequency = InterCom.playerTrack.midiToHertz(note);
 		distantNoteFrequency = InterCom.playerTrack.midiToHertz(InterCom.playerTrack.distantNoteFromNormalized(y)); // Frequency of the more "distant" Note from our frequency-area

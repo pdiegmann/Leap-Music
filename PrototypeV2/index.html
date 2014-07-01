@@ -82,19 +82,22 @@
 			<h1>Einstellungen</h1>
 			Hier kannst du deine Einstellungen vornehmen. 
 			<form method="post" action="">
-				<label for="select_notes">Anzahl der Noten auswählen</label>
-				<select id="select_notes">
+				<label for="select_numberNotes">Anzahl der Noten auswählen:</label>
+				<select id="select_numberNotes" name="select_numberNotes">
 					<option value="8">8</option>
+					<option value="12">12</option>
 					<option value="16">16</option>
+					<option value="24">24</option>
 				</select>
 				<br />
-				<label for="select_firstNote">Anzahl der Noten auswählen</label>
-				<select id="select_firstNote">
+				<label for="input_firstNote">Tiefste Note auswählen (MIDI-Notation):</label>
+				<input type="number" id="input_firstNote" name="input_firstNote" min="20" max="80">
+				<!--<select id="input_firstNote">
 					<option value="40">40</option>
 					<option value="50">50</option>
-				</select>
+				</select>-->
 				<br />
-				<input type="button" id="submit" value="Speichern" />
+				<input type="button" id="settings_save" value="Speichern" />
 			</form>
 			<hr />
 		</div>

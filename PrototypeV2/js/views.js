@@ -39,6 +39,9 @@ View.prototype.getDomElement = function() {
  ***/
 
 function MainView() {
+	document.getElementById("input_firstNote").value = Audible.firstNote;
+	document.getElementById("select_numberNotes").value = Audible.numNotes;
+
 	$('#mainView_startFreeGame').click(function() {
 		$('.menuGameView').show('fast');
 		$('.menuMainView').hide('fast');
@@ -62,11 +65,11 @@ function MainView() {
 		for (var i = 0; i < notes.length; i++) {
 			var lage = notes[i].Height;
             var ton = notes[i].Note;
-            var position = InterCom.playerTrack.lastNote - InterCom.music.getNote(ton, lage, false);
+            var position = Audible.lastNote - InterCom.music.getNote(ton, lage, false);
 			if (position < 0)
 				position = 0;
-			else if (position > (InterCom.playerTrack.lastNote - InterCom.playerTrack.firstNote - 1))
-				position = (InterCom.playerTrack.lastNote - InterCom.playerTrack.firstNote - 1);
+			else if (position > (Audible.lastNote - Audible.firstNote - 1))
+				position = (Audible.lastNote - Audible.firstNote - 1);
 			var margin = position * 5 + position * 25;
 			var obj = $("<li class='page'><div class='note' style='margin-top:" + margin + "'></div></li>");
 			console.log(position, margin);
@@ -85,9 +88,9 @@ function MainView() {
 		$('#mainView').show('fast');
 		$('#settingsView').hide('fast');
 	});
-	$('#submit').click(function() {
-		alert(document.getElementById("select_notes").value);
-		alert(document.getElementById("select_firstNote").value);
+	$('#settings_save').click(function() {
+		alert(document.getElementById("select_numberNotes").value);
+		alert(document.getElementById("input_firstNote").value);
 	});
 
 	return new View("mainView");
@@ -99,7 +102,7 @@ var GameView = function GameView() {
 	$('#gameView_back').click(function() {
 		InterCom.gamestate.gameMode = -1;
 		InterCom.gamestate.gameActive = false;
-		InterCom.playerTrack.pause();
+		Audible.pause();
 		InterCom.backgroundTrack.pause();
 		InterCom.gamestate.popActiveView();
 		$('#mainView').show('fast');
