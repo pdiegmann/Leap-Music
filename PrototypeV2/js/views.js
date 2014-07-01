@@ -101,11 +101,16 @@ var SettingsView = function SettingsView() {
 	this.domId = "settingsView";
 	$('#settings_save').click(function(e) {
 		e.preventDefault();
-		console.log(document.getElementById("select_numberNotes").value);
-		console.log(document.getElementById("input_firstNote").value);
-		console.log("a");
+		try { Audible.numNotes = parseInt(document.getElementById("select_numberNotes").value); }
+		catch (e) { console.log(e); }
+		try { Audible.firstNote = parseInt(document.getElementById("input_firstNote").value); }
+		catch (e) { console.log(e); }
+		Audible.lastNote = Audible.numNotes + Audible.firstNote;
+		InterCom.playerTrack = new Audible();
+		InterCom.brackgroundTrack = new Audible();
+
 		InterCom.gamestate.popActiveView();
-		console.log("c");
+		
 		return false;
 	});
 	$('#mainView_showSettings_back').click(function() {
