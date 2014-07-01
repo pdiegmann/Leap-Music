@@ -136,6 +136,10 @@ InterCom.doVisualLoop = function() {
 		output.innerHTML += "score: " + InterCom.gamestate.currentScore + "<br/>";
 	}
 
+	var score = $('#score span');
+	if (score && InterCom.gamestate.currentScore)
+		score.text(Math.round(InterCom.gamestate.currentScore).format(0, 3, '.', ','));
+
 	InterCom.visual.updateVisual(InterCom.verticalPosition, InterCom.accurracy);
 
 	InterCom.lastVisualLoopTime = new Date().getTime();
