@@ -1,104 +1,113 @@
-function Input() {
+function Input(emulate) {
 
-	this.emulateLeapMotion = false;
+	//if (emulate && emulate != undefined) {
+	//	InterCom.emulateLeapMotion = emulate;
+	//}
 
-	if (this.emulateLeapMotion == true) {
-		var y = undefined;
-		var isPressed = false;
-
-		function handleMouseClick(event) {
-			if (!InterCom.gamestate.gameActive) return;
-			isPressed = true;
-			Audible.block = true;
-			InterCom.onReceiveInput(y, 0.5);
-		}
-
-		function handleMouseUp(event) {
-			if (!InterCom.gamestate.gameActive) return;
-			isPressed = false;
-			Audible.block = false;
-			InterCom.onReceiveInput(y, 0.0);
-		}
-
-		var counter = 0;
-
-		function handleMouseMove(event) {
-			if (!InterCom.gamestate.gameActive) return;
-
-			if (counter % 2 == 0) {
-				counter = 0;
-			} else {
-				counter++;
-				return;
-			}
-
-			event = event || window.event; // IE-ism
-			var temp = processPositionChange([event.clientX, window.innerHeight - event.clientY, 0], window.innerHeight, window.innerWidth);
-			if (temp != undefined)
-				y = temp;
-			if (isPressed == true) {
+	this.init = function() {
+		if (InterCom.emulateLeapMotion == true) {
+			var y = undefined;
+			var isPressed = false;
+			function handleMouseClick(event) {
+				console.log(InterCom.emulateLeapMotion);
+				if (!InterCom.emulateLeapMotion) return;
+				if (!InterCom.gamestate.gameActive) return;
+				isPressed = true;
+				Audible.block = true;
 				InterCom.onReceiveInput(y, 0.5);
 			}
 
-			counter++;
-		}
+			function handleMouseUp(event) {
+				if (!InterCom.emulateLeapMotion) return;
+				if (!InterCom.gamestate.gameActive) return;
+				isPressed = false;
+				Audible.block = false;
+				InterCom.onReceiveInput(y, 0.0);
+			}
 
-		window.onmousemove = handleMouseMove;
-		document.body.onmousedown = handleMouseClick;
-		document.body.onmouseup = handleMouseUp;
-	} else {
-		Leap.loop(function(frame) {
-			if (!InterCom.gamestate.gameActive) return;
-			if (frame != undefined) {
-				var hands = frame.hands;
-				var interactionBox = frame.interactionBox;
+			var counter = 0;
 
-				if (interactionBox != undefined && hands != undefined && hands.length > 0) {
-					var lefthand = hands[0];
-					var righthand = hands[0];
+			function handleMouseMove(event) {
+				if (!InterCom.emulateLeapMotion) return;
+				if (!InterCom.gamestate.gameActive) return;
 
-					if (hands.length > 1) {
-						righthand = hands[1];
+				if (counter % 2 == 0) {
+					counter = 0;
+				} else {
+					counter++;
+					return;
+				}
 
-						if (lefthand.type=='right') {
-							var dummy = lefthand;
-							lefthand = righthand;
-							righthand = dummy;
-						}
+				event = event || window.event; // IE-ism
+				var temp = processPositionChange([event.clientX, window.innerHeight - event.clientY, 0], window.innerHeight, window.innerWidth);
+				if (temp != undefined)
+					y = temp;
+				if (isPressed == true) {
+					InterCom.onReceiveInput(y, 0.5);
+				}
 
-					}
+				counter++;
+			}
 
-					if (righthand != undefined) {
-						var position = righthand.palmPosition;
-						var height = interactionBox.height*1.5;
-						var width = interactionBox.width;
-						var y = processPositionChange(position, height, width);
+			window.onmousemove = handleMouseMove;
+			document.body.onmousedown = handleMouseClick;
+			document.body.onmouseup = handleMouseUp;
+		} else {
+			Leap.loop(function(frame) {
+				if (!InterCom.gamestate.gameActive) return;
+				if (frame != undefined) {
+					var hands = frame.hands;
+					var interactionBox = frame.interactionBox;
 
-						if (y != undefined) {
-							var sphereRadiusNormalized = righthand.sphereRadius;
-							sphereRadiusNormalized = sphereRadiusNormalized - 70;
-							sphereRadiusNormalized = sphereRadiusNormalized / 70
-							if (sphereRadiusNormalized < 0) {
-								sphereRadiusNormalized = 0;
-							} else if (sphereRadiusNormalized > 1) {
-								sphereRadiusNormalized = 1;
+					if (interactionBox != undefined && hands != undefined && hands.length > 0) {
+						var lefthand = hands[0];
+						var righthand = hands[0];
+
+						if (hands.length > 1) {
+							righthand = hands[1];
+
+							if (lefthand.type=='right') {
+								var dummy = lefthand;
+								lefthand = righthand;
+								righthand = dummy;
 							}
-							InterCom.onReceiveInput(y, sphereRadiusNormalized);
+
 						}
 
-						/*var schwelle = 50
-						if (lefthand != undefined && lefthand.palmVelocity[1] > schwelle) {
-							startNote(frequency);
+						if (righthand != undefined) {
+							var position = righthand.palmPosition;
+							var height = interactionBox.height*1.5;
+							var width = interactionBox.width;
+							var y = processPositionChange(position, height, width);
+
+							if (y != undefined) {
+								var sphereRadiusNormalized = righthand.sphereRadius;
+								sphereRadiusNormalized = sphereRadiusNormalized - 70;
+								sphereRadiusNormalized = sphereRadiusNormalized / 70
+								if (sphereRadiusNormalized < 0) {
+									sphereRadiusNormalized = 0;
+								} else if (sphereRadiusNormalized > 1) {
+									sphereRadiusNormalized = 1;
+								}
+								InterCom.onReceiveInput(y, sphereRadiusNormalized);
+							}
+
+							/*var schwelle = 50
+							if (lefthand != undefined && lefthand.palmVelocity[1] > schwelle) {
+								startNote(frequency);
+							}
+							else if(lefthand != undefined && lefthand.palmVelocity[1] < (schwelle*-1))
+							{
+								endNote();
+							}*/
 						}
-						else if(lefthand != undefined && lefthand.palmVelocity[1] < (schwelle*-1))
-						{
-							endNote();
-						}*/
 					}
 				}
-			}
-		});
-	}
+			});
+		}
+	};
+
+	this.init();
 
 	function processPositionChange(position, roomHeight, roomWidth) {
 		var y = position[1]; // 0: x, 1: y, 2: z

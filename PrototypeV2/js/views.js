@@ -106,8 +106,13 @@ var SettingsView = function SettingsView() {
 		try { Audible.firstNote = parseInt(document.getElementById("input_firstNote").value); }
 		catch (e) { console.log(e); }
 		Audible.lastNote = Audible.numNotes + Audible.firstNote;
-		try { InterCom.input.emulateLeapMotion = document.getElementById("checkbox_emulate").checked; }
+
+		try { 
+			InterCom.emulateLeapMotion = document.getElementById("checkbox_emulate").checked;
+			InterCom.input.init();
+		}
 		catch (e) { console.log(e); }
+
 		InterCom.playerTrack = new Audible();
 		InterCom.brackgroundTrack = new Audible();
 

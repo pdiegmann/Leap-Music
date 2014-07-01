@@ -6,6 +6,7 @@ InterCom.input = undefined;
 InterCom.music = undefined;
 InterCom.visual = undefined;
 InterCom.gamestate = undefined;
+InterCom.emulateLeapMotion = false;
 
 InterCom.verticalPosition = undefined;
 InterCom.frequency = undefined;
