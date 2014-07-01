@@ -21,8 +21,7 @@ View.prototype.getDomElement = function() {
 
 // pop's a view from the stack and animates it's slide out
 View.prototype.pop = function() {
-	// TODO: Animate
-	// remove from View Stack
+	this.getDomElement().hide('fast');
 };
 
 // pushes a view onto our current view and animates it
@@ -41,6 +40,8 @@ View.prototype.getDomElement = function() {
 
 function MainView() {
 	$('#mainView_startFreeGame').click(function() {
+		$('.menuGameView').show('fast');
+		$('.menuMainView').hide('fast');
 		InterCom.gamestate.gameMode = 0;
 		InterCom.activeView().pushOnTop(InterCom.gamestate.getGameView());
 		InterCom.gamestate.gameActive = true;
@@ -48,11 +49,14 @@ function MainView() {
 	});
 	$('#mainView_startScoreGame').click(function() {
 		$('#mainView_startScoreGame').hide();
+		$('.menuGameView').show('fast');
+		$('.menuMainView').hide('fast');
 		InterCom.gamestate.gameMode = 1;
 		InterCom.activeView().pushOnTop(InterCom.gamestate.getGameView());
 		InterCom.gamestate.gameActive = true;
 		var container = $('#notes .bxslider');
 		container.empty();
+		container.append("<li class='page'></li>");
 		container.append("<li class='page'></li>");
 		var notes = InterCom.music.notes;
 		for (var i = 0; i < notes.length; i++) {
@@ -70,15 +74,15 @@ function MainView() {
 		}
 		container.append("<li class='page'></li>");
 		InterCom.gamestate.getActiveView().getNotesSlider().show();
-
+		document.getElementById('songfileform').reset();
 	});
 	$('#mainView_showSettings').click(function() {
-		$('#mainView').hide();
-		$('#settingsView').show();
+		$('#mainView').hide('fast');
+		$('#settingsView').show('fast');
 	});
 	$('#mainView_showSettings_back').click(function() {
-		$('#mainView').show();
-		$('#settingsView').hide();
+		$('#mainView').show('fast');
+		$('#settingsView').hide('fast');
 	});
 	$('#submit').click(function() {
 		alert(document.getElementById("select_notes").value);
@@ -91,6 +95,17 @@ function MainView() {
 var GameView = function GameView() {
 	View.apply(this, arguments);
 	this.domId = "gameView";
+	$('#gameView_back').click(function() {
+		InterCom.gamestate.gameMode = -1;
+		InterCom.gamestate.gameActive = false;
+		InterCom.playerTrack.pause();
+		InterCom.backgroundTrack.pause();
+		InterCom.gamestate.popActiveView();
+		$('#mainView').show('fast');
+		$('#gameView').hide('fast');
+		$('.menuMainView').show('fast');
+		$('.menuGameView').hide('fast');
+	});
 	if (InterCom.gamestate != undefined && InterCom.gamestate.gameMode == 1) {
 		this.getNotesSlider().show();
 	}

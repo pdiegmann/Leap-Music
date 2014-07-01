@@ -38,8 +38,9 @@
     <div id="navigation">
         <p>
             Leap Music
-            <a id="mainView_showSettings_back">Start</a>
-            <a id="mainView_showSettings">Einstellungen</a>
+            <a id="mainView_showSettings_back" class="menuMainView">Start</a>
+            <a id="mainView_showSettings" class="menuMainView">Einstellungen</a>
+            <a id="gameView_back" class="menuGameView hidden">Spiel beenden</a>
             <!--<a href="team">Team</a>-->
         </p>
     </div>
@@ -55,7 +56,7 @@
 			<hr/>
 			<h2>Spiele einen Song</h2>
 			Spiele die Noten nach und gewinne tolle Preise!
-			<br>W&auml;hle eine Song-Datei<input type="file" id="songFile" name="songFile" />
+			<br>W&auml;hle eine Song-Datei<form id="songfileform"><input type="file" id="songFile" name="songFile" /></form>
 			<p class="hidden" id="mainView_startScoreGame">Und <a >starte das Spiel</a>.</p>
 
 		</div>
@@ -123,7 +124,6 @@
 				    	return function(e) {
 				    		InterCom.music.initSong(JSON.parse(e.target.result));
 				    		$('#mainView_startScoreGame').show();
-
 				    	}
 				    })(f);
 
