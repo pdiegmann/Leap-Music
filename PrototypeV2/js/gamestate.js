@@ -73,7 +73,6 @@ function Gamestate() {
 		else
 			$('#' + view.domId).show('fast');
 		this.viewStack.push(view);
-		console.log(this.viewStack);
 	};
 
 	this.pushView(new MainView());

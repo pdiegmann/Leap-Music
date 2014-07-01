@@ -100,7 +100,6 @@ function Audible() {
 	this.hertzToMidi = function(hertz) {
 		var a = 440; // a is 440 hz...
 		var midiNote = Math.round(69 + 12*Math.log(hertz/a)/Math.log(2));
-		console.log(hertz + ": " + midiNote);
 		if (midiNote <= Audible.firstNote)
 			return Audible.firstNote;
 		else if (midiNote >= Audible.lastNote)

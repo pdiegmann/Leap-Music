@@ -74,7 +74,6 @@ function MainView() {
 				position = (Audible.lastNote - Audible.firstNote - 1);
 			var margin = position * 5 + position * 25;
 			var obj = $("<li class='page'><div class='note' id='NoteNr"+i+"' style='margin-top:" + margin + "'></div></li>");
-			console.log(position, margin);
 			container.append(obj);
 		}
         

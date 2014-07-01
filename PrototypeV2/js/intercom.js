@@ -48,8 +48,11 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 	var frequency = InterCom.playerTrack.normalizedToHertz(y);
 
 	InterCom.gamestate.palmSphereRadiusNormalized = palmSphereRadiusNormalized;
+	
 	if (InterCom.gamestate.lastPalmSphereRadiusNormalized > 0.25 && palmSphereRadiusNormalized <= 0.25) {
+		console.log("a", InterCom.gamestate.palmSphereRadiusNormalized);
 		InterCom.needsAudioUpdate = true;
+		InterCom.doAudioLoop();
 		return;
 	}
 
@@ -82,9 +85,10 @@ InterCom.onReceiveInput = function(y, palmSphereRadiusNormalized) {
 
 	InterCom.needsVisualUpdate = true;
 
-	if (InterCom.isStroking(palmSphereRadiusNormalized)) {
+	if (InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized)) {
 		InterCom.needsAudioUpdate = true;
 	}
+	console.log("b", InterCom.gamestate.palmSphereRadiusNormalized);
 
 	if (!InterCom.useLoops) {
 		InterCom.doAudioLoop();
@@ -97,17 +101,21 @@ InterCom.doAudioLoop = function() {
 		return;
 
 	InterCom.needsAudioUpdate = false;
-
+	console.log("c", InterCom.gamestate.palmSphereRadiusNormalized);
 	if (InterCom.gamestate.palmSphereRadiusNormalized <= 0.25) {
 		InterCom.playerTrack.endNote();
 	} else if (InterCom.gamestate.dynamicNote || (!InterCom.gamestate.dynamicNote && InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized))) {
 		InterCom.playerTrack.startNote(InterCom.note);
 		if (InterCom.gamestate.gameMode == 1) {
 			InterCom.music.playNote(InterCom.backgroundTrack);
-			InterCom.gamestate.getActiveView().getNotesSlider().goToNextSlide();
+			if (InterCom.isStroking(InterCom.gamestate.palmSphereRadiusNormalized)) {
+				InterCom.gamestate.getActiveView().getNotesSlider().goToNextSlide();
 			                                                                
-			InterCom.currentNoteNr++;
-		    document.getElementById("NoteNr"+InterCom.currentNoteNr).style.background = "#12a0d2"; 
+				InterCom.currentNoteNr++;
+				var noteElement = document.getElementById("NoteNr"+InterCom.currentNoteNr);
+				if (noteElement)
+			    	noteElement.style.background = "#12a0d2"; 
+			}
 		}
 	}
 
@@ -115,7 +123,7 @@ InterCom.doAudioLoop = function() {
 		InterCom.gamestate.updateScore(InterCom.frequency, InterCom.targetNoteFrequency, InterCom.playerTrack.normalizedToHertz(0), InterCom.playerTrack.normalizedToHertz(1), InterCom.audioLoopTime);
 	}
 
-	InterCom.lastPalmSphereRadiusNormalized = InterCom.palmSphereRadiusNormalized;
+	InterCom.gamestate.lastPalmSphereRadiusNormalized = InterCom.gamestate.palmSphereRadiusNormalized;
 }
 
 InterCom.doVisualLoop = function() {
