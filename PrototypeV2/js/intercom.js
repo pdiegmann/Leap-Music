@@ -104,7 +104,8 @@ InterCom.doAudioLoop = function() {
 		}
 	}
 
-	InterCom.gamestate.updateScore(InterCom.frequency, InterCom.playerTrack.midiToHertz(InterCom.gamestate.getCurrentNote()), InterCom.playerTrack.normalizedToMidi(0), InterCom.playerTrack.normalizedToMidi(1), InterCom.audioLoopTime);
+	//InterCom.gamestate.updateScore(InterCom.frequency, InterCom.playerTrack.midiToHertz(InterCom.gamestate.getCurrentNote()), InterCom.playerTrack.normalizedToMidi(0), InterCom.playerTrack.normalizedToMidi(1), InterCom.audioLoopTime);
+	InterCom.gamestate.updateScore(InterCom.frequency, InterCom.playerTrack.midiToHertz(InterCom.targetNoteFrequency), InterCom.playerTrack.normalizedToHertz(0), InterCom.playerTrack.normalizedToHertz(1), InterCom.audioLoopTime);
 
 	InterCom.lastPalmSphereRadiusNormalized = InterCom.palmSphereRadiusNormalized;
 }

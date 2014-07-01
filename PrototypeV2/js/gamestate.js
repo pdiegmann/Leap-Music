@@ -45,12 +45,15 @@ function Gamestate() {
 		var defaultScore = 10;
 
 		score = accurracy * defaultScore * (elapsedTime / timeSequence);
-
 		return score;
 	};
 
 	this.updateScore = function(currentFreq, targetFreq, minFreq, maxFreq, elapsedTime){
-		this.currentScore += this.calculateScore(currentFreq, targetFreq, minFreq, maxFreq, elapsedTime);
+		if (isNaN(this.currentScore))
+			this.currentScore = 0;
+		var scoreToAdd = this.calculateScore(currentFreq, targetFreq, minFreq, maxFreq, elapsedTime);
+		if (!isNaN(scoreToAdd))
+			this.currentScore += scoreToAdd;
 	}
 
 	this.pushView = function(view) {

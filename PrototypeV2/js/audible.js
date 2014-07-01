@@ -154,7 +154,8 @@ function Audible() {
 	}
 
 	this.normalizedToHertz = function(normalized) {
-		return (a / 32) * Math.pow(2, ((normalized - 9) / 12));
+		var floatingMidi = normalized * (numNotes - 1) + this.firstNote;
+		return (a / 32) * Math.pow(2, ((floatingMidi - 9) / 12));
 		//var maxHertz = midi[numNotes - 1];
 		//var minHertz = midi[0];
 		//return (maxHertz * normalized) + (minHertz * (1 - normalized));
