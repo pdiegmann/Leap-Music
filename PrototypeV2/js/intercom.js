@@ -109,7 +109,7 @@ InterCom.doAudioLoop = function() {
 				InterCom.gamestate.getActiveView().getNotesSlider().goToNextSlide();
 			                                                                
 				InterCom.currentNoteNr++;
-				if(InterCom.currentNoteNr > MainView.maxNoteNr) {
+				if(InterCom.currentNoteNr > MainView.maxNoteNr+1) {
 				    GameView.prototype.EndGame();
                 } else {                                                      
 				    var noteElement = document.getElementById("NoteNr"+InterCom.currentNoteNr);
