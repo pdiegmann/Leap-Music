@@ -129,6 +129,11 @@ var SettingsView = function SettingsView() {
 
 		try { 
 			InterCom.emulateLeapMotion = document.getElementById("checkbox_emulate").checked;
+			
+			//Setze Coockie
+			if(InterCom.emulateLeapMotion) document.cookie ="true";
+			else document.cookie = "false";
+			
 			InterCom.input.init();
 		}
 		catch (e) { console.log(e); }
