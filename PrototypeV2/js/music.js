@@ -1,6 +1,7 @@
 function Music() {
 
     this.note = undefined;
+    this.title = undefined;
     this.count = undefined;
     this.notes = undefined;
     this.SongEnd = true;
@@ -49,6 +50,7 @@ function Music() {
     this.initSong = function(json) { //songName) {
         song = json; //Songs.data[songName]; //JSON.parse( Songs.entchen );    
         this.notes = song.Notes;
+        this.title = song.Titel;
         this.count = 0;      
         this.SongEnd = false;   	
     }

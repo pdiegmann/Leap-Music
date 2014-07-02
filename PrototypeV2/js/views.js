@@ -61,7 +61,11 @@ function MainView() {
 		$('#mainView_startScoreGame').hide();
 		$('.menuGameView').show('fast');
 		$('.menuMainView').hide('fast');
-		document.getElementById("outputPoints").style.display = 'block';
+		document.getElementById("outputPoints").style.display = 'block';  
+		    var getDiv = document.getElementById('outputSong');
+		    getDiv.style.display = 'block';
+		    title = InterCom.music.title;
+		    document.all.outputSong.innerHTML = 'Du spielst gerade "'+title+'"';
 		
 		InterCom.gamestate.gameMode = 1;
 		InterCom.gamestate.currentScore = 0;
