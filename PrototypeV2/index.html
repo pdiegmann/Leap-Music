@@ -26,7 +26,9 @@
 	<script src="js/input.js"></script>
 	<script src="js/views.js"></script>
 	<script src="js/gamestate.js"></script>
-	<script src="js/music.js"></script>
+	<script src="js/music.js"></script>   
+    
+	<script src="js/firework.js"></script>
 
 <!-- Style -->
     <link href="css/style.css" rel="stylesheet" />
@@ -83,6 +85,13 @@
         
 
 		</div>
+		<div id="gameEndView" class="fullScreenView hidden">
+		  <div class="buttonText">
+            Herzlichen Gl&uuml;ckwunsch! Gewonnen <3
+          </div>        
+        </div>
+
+
 		<div id="gameView" class="fullScreenView hidden">
 			<div id="currentNoteContainer"><div id="currentNote"></div></div>
 			<div id="notes" class="">
@@ -134,10 +143,12 @@
         <div id="logo"><img src="images/logo.png"></div>
 		<h2>Hey!</h2>
 		Hallo du, sch&ouml;n dich mal wieder zu sehen!
+		<div id="outputPoints" class="hidden">
 		<hr/>
 		<div id="score"><b>Gesammelte Punkte:</b> <span></span></div>
 		<div id="note_current"><b>Aktuelle Note:</b> <span></span></div>
 		<div id="note_target"><b>Ziel Note:</b> <span></span></div>
+		</div>
 	</div>
 </div>
 		<script>

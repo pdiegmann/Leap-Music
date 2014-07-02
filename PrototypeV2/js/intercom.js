@@ -109,9 +109,13 @@ InterCom.doAudioLoop = function() {
 				InterCom.gamestate.getActiveView().getNotesSlider().goToNextSlide();
 			                                                                
 				InterCom.currentNoteNr++;
-				var noteElement = document.getElementById("NoteNr"+InterCom.currentNoteNr);
-				if (noteElement)
-			    	noteElement.style.background = "#12a0d2"; 
+				if(InterCom.currentNoteNr > MainView.maxNoteNr) {
+				    GameView.prototype.EndGame();
+                } else {                                                      
+				    var noteElement = document.getElementById("NoteNr"+InterCom.currentNoteNr);
+				    if (noteElement)
+			    	    noteElement.style.background = "#12a0d2";   
+                }
 			}
 		}
 	}

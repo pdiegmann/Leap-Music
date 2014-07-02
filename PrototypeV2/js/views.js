@@ -40,6 +40,8 @@ View.prototype.getDomElement = function() {
  * View Instances
  ***/
 
+ 
+MainView.maxNoteNr = 0;
 function MainView() {
 	document.getElementById("input_firstNote").value = Audible.firstNote;
 	document.getElementById("select_numberNotes").value = Audible.numNotes;
@@ -47,7 +49,8 @@ function MainView() {
 
 	$('#mainView_startFreeGame').click(function() {
 		$('.menuGameView').show('fast');
-		$('.menuMainView').hide('fast');
+		$('.menuMainView').hide('fast');     
+		document.getElementById("outputPoints").style.display = 'block';
 		InterCom.gamestate.gameMode = 0;
 		InterCom.gamestate.currentScore = 0;
 		InterCom.gamestate.pushView(InterCom.gamestate.getGameView());
@@ -58,6 +61,8 @@ function MainView() {
 		$('#mainView_startScoreGame').hide();
 		$('.menuGameView').show('fast');
 		$('.menuMainView').hide('fast');
+		document.getElementById("outputPoints").style.display = 'block';
+		
 		InterCom.gamestate.gameMode = 1;
 		InterCom.gamestate.currentScore = 0;
 		var gameView = InterCom.gamestate.getGameView();
@@ -80,6 +85,8 @@ function MainView() {
 			var margin = position * 5 + position * 25;
 			var obj = $("<li class='page'><div class='note' id='NoteNr"+i+"' style='margin-top:" + margin + "'></div></li>");
 			container.append(obj);
+		
+            MainView.maxNoteNr = i;	
 		}
         
 		container.append("<li class='page'></li>");
@@ -96,6 +103,7 @@ function MainView() {
 	$('#mainView_showSettings').click(function() {
 		//$('#mainView').hide('fast');
 		//$('#settingsView').show('fast');
+		
 		if (InterCom.activeView() != InterCom.gamestate.getSettingsView()) {
 			InterCom.gamestate.pushView(InterCom.gamestate.getSettingsView()); 			
 		}
@@ -150,6 +158,8 @@ var GameView = function GameView() {
 		$('.menuMainView').show('fast');
 		$('.menuGameView').hide('fast');
 		$('#mainView_chooseSong').show('fast');
+		
+        Fireworks.end();
 	});
 	if (InterCom.gamestate != undefined && InterCom.gamestate.gameMode == 1) {
 		this.getNotesSlider().show();
@@ -174,4 +184,15 @@ GameView.prototype.getNotesSlider = function() {
 		this.notesSlider = this.buildNotesSlider();
 	}
 	return this.notesSlider; 
+};
+
+//Was wird angezeigt, wenn das Lied zuende ist?
+GameView.prototype.EndGame = function() {
+		InterCom.gamestate.gameMode = -1;
+		InterCom.gamestate.gameActive = false;
+		InterCom.playerTrack.pause();
+		InterCom.backgroundTrack.pause();
+		$('#gameView').hide('fast');
+		$('#gameEndView').show('slow');
+        Fireworks.start();
 };
